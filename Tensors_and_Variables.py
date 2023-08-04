@@ -12,6 +12,7 @@ if __name__ == "__main__":
     # ------
 
     # Tensor Dimension:
+    # ---------------------------
     # Tensors are multidimensional arrays.
     # The shape of the tensor [8] is 0.
     # The shape of the tensor [2 0 -3] is (3,).
@@ -19,7 +20,8 @@ if __name__ == "__main__":
     # The shape of the tensor [[[1 2 0], [3 5 -1]], [[1 5 6], [2 3 8]]] is (2, 2, 3).
     # Note how the length of the tuple is the depth of the tensor.
 
-    # Create tensors
+    # Initialisation and Casting
+    # ---------------------------
     tensor_0d = tf.constant(8) # prints as tf.Tensor(8, shape=(), dtype=int32)
     tensor_1d = tf.constant([2, 0, -3]) # tf.Tensor([ 2  0 -3], shape=(3,), dtype=int32)
 
@@ -80,6 +82,83 @@ if __name__ == "__main__":
         shape = [2, 2], minval = 0, maxval = 1, dtype = tf.dtypes.float32,
         seed = None, name = None
     )
+
+
+    # Indexing Tensors:
+    # ---------------------------
+    # Just like in pretty much all programming langages, indexing is done with
+    # square brackets. This also returns a tensor. To recap, python indexing is
+    # done like: myTensor[min : max + 1 : step]. Similar to R, you can extract
+    # rows and columns by specifying indicies: myTensor[rows, columns].
+    # print(tensor_2d)
+    # print(tensor_2d[:,1]) # Second column
+    # print(tensor_2d[3, :]) # Last row
+
+    # Indexing scales up for arbitrary tensor sizes.
+    # print(tensor_3d)
+    # print(tensor_3d[:,:,2])
+
+
+    # Tensorflow Math Functions:
+    # ---------------------------
+    # https://www.tensorflow.org/api_docs/python/tf/math.
+    # See the documentation tf.math for more details. Most of the functions work
+    # element wise across tensors. Contained therein are abs(), trigonometric,
+    # and many other mathematical functions. TensorFlow can also work with
+    # complex data types. The tf.abs() method will compute the magnitude of a
+    # complex number, not just turning components positive:
+    z = tf.constant([-3.141 + 2.718j])
+    z_abs = tf.abs(z) # if z = a + bi -> |z| = sqrt(a^2 + b^2)
+
+    # Arithmetric of tensors is element-wise if they have the same shape
+    T1 = tf.constant([1, 2, 3, 4, 5], dtype = tf.float32)
+    T2 = tf.constant([1, 0, -3, 5, 2], dtype = tf.float32)
+    # print(tf.add(T1, T2))
+    # print(tf.subtract(T1, T2))
+    # print(tf.multiply(T1, T2))
+    # print(tf.divide(T1, T2)) # Produces an inf value in element 2
+    # print(tf.math.divide_no_nan(T1, T2)) # Replaces inf by zeroes with 0.
+    # print(tf.sqrt(T1))
+
+    # Broadcasting tensors. If one tensor is smaller than another, the smaller
+    # one is scaled-up and then arithmetric can be done element-wise like in R.
+    T3 = tf.constant([5], dtype = tf.float32)
+    T4 = tf.constant([[7], [8], [9]], dtype = tf.float32)
+    # print(tf.add(T1, T3))
+    # print(tf.add(T1, T4)) # Creates a (3, 5) tensor instead.
+    # Other functions such as tf.math.maximum and tf.math.minimum will find the
+    # minimum and maximum element-wise comparisons between tensors and supports
+    # broadcasting semantics. The argmax and argmin methods will return the index
+    # of the maximum values in a tensor.
+    # print(tensor_3d)
+    # print(tf.math.argmax(input = tensor_3d, axis = None, output_type = tf.dtypes.int64, name = None))
+    # print(tf.math.argmin(tensor_3d, axis = None, output_type = tf.dtypes.int64, name = None))
+    # When axis  = 0, it will fix across rows and compare across columns. If the
+    # axis = 1, we operate across rows of the tensor.
+
+    # We can raise elements of one tensor to powers of elements to another tensor.
+    # print(tf.pow(T1, T3))
+
+    # The method tf.math.reduce_sum() find the sum of all elements across the
+    # dimensions of a tensor.
+    # print(tf.math.reduce_sum(
+    #     input_tensor = tensor_3d, axis = None, keepdims = False, name = None
+    # ))
+    # tf.math.reduce_max and tf.math.reduce_min get the single max or min values
+    # in the tensor. tf.math.reduce_mean() operates exactly the same, and you can
+    # also specify the axes you wat to operate across. The keepdims argument in
+    # the reduce family of methods the reduced dimensions with length 1.
+    # For more complex tensors, more care is needed to ensure correct broadcasting.
+
+    
+
+    
+
+    
+    
+    
+    
+    
 
 # ============================================================================ #
 # Tensors and Variables - Code End                                             |
