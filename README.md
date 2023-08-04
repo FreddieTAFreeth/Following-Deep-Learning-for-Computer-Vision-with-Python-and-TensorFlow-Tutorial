@@ -1,2 +1,2 @@
 # Following-Deep-Learning-for-Computer-Vision-with-Python-and-TensorFlow-Tutorial.
-Following the Deep Learning for Computer Vision with Python and TensorFlow – Complete Course tutorial on YouTube to learn more about TensorFlow.
+Following the video *Deep Learning for Computer Vision with Python and TensorFlow – Complete Course* tutorial on YouTube to learn more about TensorFlow by freeCodeCamp.org (https://www.youtube.com/watch?v=IA3WxTTPXqQ). The code will be very similar to that in the tutorial, and I may add extra comments or modify some portions of the code.
