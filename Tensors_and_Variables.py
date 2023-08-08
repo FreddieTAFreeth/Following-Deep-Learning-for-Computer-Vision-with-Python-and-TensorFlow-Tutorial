@@ -9,7 +9,7 @@ import numpy as np
 
 if __name__ == "__main__":
     # Notes:
-    # ------
+    # ---------------------------
 
     # Tensor Dimension:
     # ---------------------------
@@ -154,8 +154,76 @@ if __name__ == "__main__":
     sigmoid_tensor_1d = tf.math.sigmoid(x = tf.cast(tensor_1d, dtype = tf.float16), name = None)
 
     # The method tf.math.top_k() find the values and indicies for the k largest
-    # entries for the last dimension.
+    # entries for the last dimension row-wise.
     top_k_tensor_1d = tf.math.top_k(input = tensor_1d, k = 2, sorted = True, name = None)
+
+
+    # Linear Algebra Operations:
+    # ---------------------------
+    # https://www.tensorflow.org/api_docs/python/tf/linalg
+    # More information and details in the documentation.
+
+    # Matrix multiplications is done via tf.linalg.matmul()
+    M1 = tf.constant([
+        [1, 2, 3],
+        [4, 5, 6]
+    ])
+    
+    M2 = tf.constant([
+        [ -7,  8],
+        [ -9, 10],
+        [-11, 12]
+    ])
+
+    M3 = tf.constant([
+        [1,    2,   3,    4],
+        [0, -1/2, 1/3, -1/4],
+        [5,   -6,   7,   -8],
+        [1,    0,   1,    0]
+    ])
+
+    # Matrix multiplication with Tensorflow. If one matrix needs to be transposed,
+    # you can specify which one via the function arguments.
+    matrix_product = tf.linalg.matmul(
+        a = M1, b = M2, transpose_a = False, transpose_b = False,
+        adjoint_a = False, adjoint_b = False, a_is_sparse = False,
+        b_is_sparse = False, output_type = None, name = None
+    )
+
+    # Matrix transpose:
+    M1_transpose = tf.transpose(M1)
+
+    # Matrix adjoints:
+    M1_adjoint = tf.linalg.adjoint(M1)
+
+    # The tf.linalg.band_part() method sets everything outside a central band in
+    # each innermost matrix to zero. Special cases written in the documentation:
+    # tf.linalg.band_part(input, 0, -1) ==> Upper triangular part.
+    # tf.linalg.band_part(input, -1, 0) ==> Lower triangular part.
+    # tf.linalg.band_part(input, 0, 0) ==> Diagonal.
+
+    # Te method tf.linalg.cholesky() find the Cholesky decomposition of one or
+    # more square matricies.
+    M3_Cholesky = tf.linalg.cholesky(input = M3, name = None)
+
+    # The corss product is calculated from tf.linalg.cross(). They must have the
+    # same shape.
+    M1_M1_cross = tf.linalg.cross(a = M1, b = M1, name = None)
+
+    # Inverses of square matricies are found via tf.linalg.inv():
+    M3_inverse = tf.linalg.inv(input = M3, adjoint = False, name = None)
+
+    # Matrix singular value decomposition (SVD):
+    s_M3, u_M3, v_M3 = tf.linalg.svd(tensor = M3, full_matrices = False, name = None)
+
+    # The method np.einsum() is computed as follows. The value i is the number
+    # of rows of M1, j the number of columns in M1 which is equal to the number
+    # of rows in M2. Lastly, k is the number of columns of M2.
+    matrix_product = np.einsum("ij, jk -> ik", M1, M2)
+
+    # We can use the einsum syntax to do Hadamard (element-wise) multiplication
+    # of matricies with the same shape:
+    matrix_product = np.einsum("ij, ij -> ij", M1, M1)
     
 # ============================================================================ #
 # Tensors and Variables - Code End                                             |
