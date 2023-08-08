@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ============================================================================ #
-# Tensors and Variables - Frederick T. A. Freeth                    04/08/2023 |
+# Tensors and Variables - Frederick T. A. Freeth                    08/08/2023 |
 # ============================================================================ #
 # Following https://www.youtube.com/watch?v=IA3WxTTPXqQ.
 
@@ -150,16 +150,13 @@ if __name__ == "__main__":
     # the reduce family of methods the reduced dimensions with length 1.
     # For more complex tensors, more care is needed to ensure correct broadcasting.
 
-    
+    # The method tf.math.sigmoid() computes the sigmoid element-wise.
+    sigmoid_tensor_1d = tf.math.sigmoid(x = tf.cast(tensor_1d, dtype = tf.float16), name = None)
 
+    # The method tf.math.top_k() find the values and indicies for the k largest
+    # entries for the last dimension.
+    top_k_tensor_1d = tf.math.top_k(input = tensor_1d, k = 2, sorted = True, name = None)
     
-
-    
-    
-    
-    
-    
-
 # ============================================================================ #
 # Tensors and Variables - Code End                                             |
 # ============================================================================ #
