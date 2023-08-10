@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ============================================================================ #
-# Tensors and Variables - Frederick T. A. Freeth                    08/08/2023 |
+# Tensors and Variables - Frederick T. A. Freeth                    10/08/2023 |
 # ============================================================================ #
 # Following https://www.youtube.com/watch?v=IA3WxTTPXqQ.
 
@@ -224,6 +224,66 @@ if __name__ == "__main__":
     # We can use the einsum syntax to do Hadamard (element-wise) multiplication
     # of matricies with the same shape:
     matrix_product = np.einsum("ij, ij -> ij", M1, M1)
+
+    # Matrix transpose via einsum:
+    matrix_transpose = np.einsum("ij -> ji", M1)
+
+    # For b = batchsize and two tensors of shape (2, 3, 4) and (2, 4, 5), we
+    # create the tensor of shape (2, 3, 5) va a batch multiplication using
+    # numpy and einsum. However, einsum is more explicit and easier to debug.
+
+    T1 = np.array([
+        [[2,  6, 5, 2],
+         [2, -2, 2, 3],
+         [1, 5, 4,  0]],
+         
+        [[1, 3, 1, 22],
+         [0, 2, 2,  0],
+         [1, 5, 4,  1]]
+    ])
+    
+    T2 = np.array ([
+        [[2, 9, 0,  3, 0],
+         [3, 6, 8, -2, 2],
+         [1, 3, 5,  0, 1],
+         [3, 0, 2,  0, 5]],
+        
+        [[1, 0, 0,  3, 0],
+         [3, 0, 4, -2, 2],
+         [1, 0, 2,  0, 0],
+         [3, 0, 1,  1, 0]]
+    ])
+
+    batch_multiplication_numpy = np.matmul(T1, T2)
+    batch_multiplication_einsum = np.einsum("bij, bjk -> bik", T1, T2)
+
+    # We can use einsum to sum up all the values in the tensor/array:
+    sum_batch_multiplication_einsum = np.einsum("bij ->", batch_multiplication_einsum)
+
+    # We can do row sums and column sums using einsum too:
+    M3_row_sums = np.einsum("ij -> i", M3)
+    M3_col_sums = np.einsum("ij -> j", M3)
+
+    # Practical example - "Attention is all you need" paper:
+    # For Q, K = batch size, K = batch size, and  s_q, s_k = model size
+    Q = np.random.randn(32,  64, 512) # Dimensions bqm
+    K = np.random.randn(32, 128, 512) # Dimensions bkm
+    result = np.einsum("bqm, bkm -> bqk", Q, K)
+
+    # Another practical example - "Reformer: The Efficient Transformer" paper:
+    # Suppose A has shape (1, 4, 8) and B has shape (1, 4, 4). So, A has a batch
+    # size of 1, sequence length of 4 and a model length of 8. In the paper, they
+    # break the data up into "buckets", so A then has shape (1, 4, 4, 2) and B
+    # has shape (1, 4, 4, 1). These buckets are arranged  by grouping columns.
+    # Let A have indicies bcij and B have indicies bcik. We want to calculate the
+    # result B.T A which has shape bckj which implies a shape of (1, 4, 1, 2).
+    A = np.random.randn(1, 4, 4, 2)
+    B = np.random.randn(2, 4, 4, 1)
+
+    # We reversed bcik to bcki in B to get the transpose of the inner arrays! 
+    result = np.einsum("bcki, bcij -> ", B, A) # Using einsum
+    result = np.matmul(np.transpose(B, (0, 1, 3, 2)), A) # Using matmul
+                      
     
 # ============================================================================ #
 # Tensors and Variables - Code End                                             |
