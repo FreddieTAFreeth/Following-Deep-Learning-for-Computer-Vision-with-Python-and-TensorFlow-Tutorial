@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ============================================================================ #
-# Tensors and Variables - Frederick T. A. Freeth                    10/08/2023 |
+# Tensors and Variables - Frederick T. A. Freeth                    11/08/2023 |
 # ============================================================================ #
 # Following https://www.youtube.com/watch?v=IA3WxTTPXqQ.
 
@@ -85,7 +85,7 @@ if __name__ == "__main__":
 
 
     # Indexing Tensors:
-    # ---------------------------
+    # ----------------------------
     # Just like in pretty much all programming langages, indexing is done with
     # square brackets. This also returns a tensor. To recap, python indexing is
     # done like: myTensor[min : max + 1 : step]. Similar to R, you can extract
@@ -100,7 +100,7 @@ if __name__ == "__main__":
 
 
     # Tensorflow Math Functions:
-    # ---------------------------
+    # ----------------------------
     # https://www.tensorflow.org/api_docs/python/tf/math.
     # See the documentation tf.math for more details. Most of the functions work
     # element wise across tensors. Contained therein are abs(), trigonometric,
@@ -159,7 +159,7 @@ if __name__ == "__main__":
 
 
     # Linear Algebra Operations:
-    # ---------------------------
+    # ----------------------------
     # https://www.tensorflow.org/api_docs/python/tf/linalg
     # More information and details in the documentation.
 
@@ -283,7 +283,20 @@ if __name__ == "__main__":
     # We reversed bcik to bcki in B to get the transpose of the inner arrays! 
     result = np.einsum("bcki, bcij -> ", B, A) # Using einsum
     result = np.matmul(np.transpose(B, (0, 1, 3, 2)), A) # Using matmul
-                      
+
+
+    # Common TensorFlow Functions:
+    # ----------------------------
+
+    # We can add an extra axis of length 1to an input tensor using tf.expand_dims()
+    tensor_3d_to_4d = tf.expand_dims(input = tensor_3d, axis = 2, name  = None)
+
+    # We can remove a dimension of length 1 of an input tensor with tf.squeeze()
+    tensor_2d_to_1d = tf.squeeze(input = T4, axis = 1, name = None)
+
+    # We can re-shape a tensor using tf.reshape(). Note that the elements have to
+    # be able to fit in the new shape of the tensor!
+    tensor_2_4_5_to_1d = tf.reshape(tensor = T2, shape = [2*4*5], name = None)
     
 # ============================================================================ #
 # Tensors and Variables - Code End                                             |
