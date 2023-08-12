@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ============================================================================ #
-# Tensors and Variables - Frederick T. A. Freeth                    11/08/2023 |
+# Tensors and Variables - Frederick T. A. Freeth                    12/08/2023 |
 # ============================================================================ #
 # Following https://www.youtube.com/watch?v=IA3WxTTPXqQ.
 
@@ -295,8 +295,18 @@ if __name__ == "__main__":
     tensor_2d_to_1d = tf.squeeze(input = T4, axis = 1, name = None)
 
     # We can re-shape a tensor using tf.reshape(). Note that the elements have to
-    # be able to fit in the new shape of the tensor!
+    # be able to fit in the new shape of the tensor! If one component of shape
+    # is -1, the size of that dimension is made so the total size remains
+    # constant. A shape of [-1] to any tensor flattens it completely. Only one
+    # element of shape can be -1.
     tensor_2_4_5_to_1d = tf.reshape(tensor = T2, shape = [2*4*5], name = None)
+
+    # We can concatenate tensors using tf.concat()
+    concat_tensor_2d = tf.concat(values = [tensor_2d, M1], axis = 0, name = None)
+
+    # Using tf.stack(), we can stack tensors along a new axis. Here, we stack
+    # four tensors of shape (2, 3) to get a tensor of shape (4, 2, 3)
+    stacked_2d_tensors = tf.stack(values = [M1, M1, M1, M1], axis = 0, name = None)
     
 # ============================================================================ #
 # Tensors and Variables - Code End                                             |
