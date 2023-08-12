@@ -305,8 +305,66 @@ if __name__ == "__main__":
     concat_tensor_2d = tf.concat(values = [tensor_2d, M1], axis = 0, name = None)
 
     # Using tf.stack(), we can stack tensors along a new axis. Here, we stack
-    # four tensors of shape (2, 3) to get a tensor of shape (4, 2, 3)
+    # four tensors of shape (2, 3) to get a tensor of shape (4, 2, 3). Setting
+    # axis = 1 will stack the rows of the tensors.
     stacked_2d_tensors = tf.stack(values = [M1, M1, M1, M1], axis = 0, name = None)
+
+    # We can add padding to a tensor using tf.pad(). The paddings argument is an
+    # array that specified what values to pad along rows and columns. In the case
+    # below, we insert 1 row of zeros above, 2 rows of zeros below, 3 rows to the
+    # left, and 4 rows to the right.
+    padded_tensor_2d = tf.pad(
+        tensor = tensor_2d, paddings = [[1, 2], [3, 4]], mode = "CONSTANT", constant_values = 0, name = None
+    )
+
+    # The tf.gather() method is used to gather slices from params axis "axis"
+    # accordig to indicies. In our example, we want to gather the values in the
+    # string tensor in positions 2 and 3 which are t2 and t3.
+    str_tensor_1d = tf.constant(["t0", "t1", "t2", "t3", "t4", "t5"])
+    values = tf.gather(
+        params = str_tensor_1d, indices = [2, 3], validate_indices = None,
+        axis = None, batch_dims = 0, name = None
+    )
+
+    # The tf.gather_nd() method gathers slices from params into a tensor with
+    # a shape specificied by indicies. With tf.gather(), indicies defines slices
+    # in the first dimension of params, but tf.gather_nd(), indicies defines
+    # slices into the first N = indicies.shape[-1] dimensions of params. If
+    # params = [[0], [1]], it returns the first and second row (i.e. just the
+    # input tensor). If params = [[1, 2]], it returns the value in the first row
+    # and second column, so "t23". The batch_dims argument let you ignore leading
+    # dimension locations from an index.
+    str_tensor_2d = tf.constant([
+        ["t11", "t12", "t13"],
+        ["t21", "t22", "t23"],
+        ["t31", "t32", "t33"]
+    ])
+    values = tf.gather_nd(
+        params = str_tensor_2d, indices = [[1, 2]], batch_dims = 0, name  = None
+    )
+
+
+    # Ragged Tensors:
+    # ----------------------------
+    # A ragged tensor is a nested variable-length list. For example:
+    #     [["t11", "t12", "t13", "t14"],
+    #      ["t21", "t22", "t23",],
+    #      ["t31", "t32",],
+    #      ["t41", "t42", "t43", "t44"]]
+    # When we try to determine the shape if it was made using tf.constant(), we
+    # will get an error: ValueError: Can't convert non-rectangular Python sequence
+    # to Tensor. For each of our rows, they must each have at least 4 elements to
+    # be rectangular. We can create ragged tensors like so:
+
+    ragged_tensor_2d = tf.ragged.constant([
+        ["t11", "t12", "t13", "t14"],
+        ["t21", "t22", "t23",],
+        ["t31", "t32",],
+        ["t41", "t42", "t43", "t44"]
+    ])
+    # Using this method, the shape will return (4, None) since the columns are
+    # variable between 2 and 4, and will no longer give an error when shape is
+    # called.
     
 # ============================================================================ #
 # Tensors and Variables - Code End                                             |
