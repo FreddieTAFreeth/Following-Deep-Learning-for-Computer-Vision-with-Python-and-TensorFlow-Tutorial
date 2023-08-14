@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ============================================================================ #
-# Tensors and Variables - Frederick T. A. Freeth                    12/08/2023 |
+# Tensors and Variables - Frederick T. A. Freeth                    14/08/2023 |
 # ============================================================================ #
 # Following https://www.youtube.com/watch?v=IA3WxTTPXqQ.
 
@@ -365,6 +365,37 @@ if __name__ == "__main__":
     # Using this method, the shape will return (4, None) since the columns are
     # variable between 2 and 4, and will no longer give an error when shape is
     # called.
+
+    # We have methods like tf.boolean_mask(), which applies a boolean mask to
+    # data, without flattening dimensions. It removes elements in the mask that
+    # has "False".
+    ragged_str_tensor_2d = tf.ragged.boolean_mask(
+        data = str_tensor_2d,
+        mask = [
+            [True, True,  False],
+            [True, False, False],
+            [True, True,  False],
+        ],
+        name = None
+    )
+
+    # The tf.RaggedTensor class has the from_row_lengths method, which requires
+    # a 1D tensor that has shape (nrow_tensor,) where each element is the length
+    # of each row of the tensor.
+    ragged_int_tensor_2d = tf.RaggedTensor.from_row_lengths(
+        values = [1, 3, 2, 0, 2, 1, 5, 7, 8, 5, 9, 0],
+        row_lengths = [3, 0, 5, 4], # The sum of this must equal the number of values
+        name = None,
+        validate = True # Checks if arguments form a valid ragged tensor
+    )
+    # Check the documentation for from_row_limits and from_row_splits methods,
+    # as they operate slightly differently.
+
+
+    # Sparse Tensors
+    # ----------------------------
+    # These methods are applied when data contains mostly zeroes. We have methods
+    # that can efficiently process and store sparse tensors.
     
 # ============================================================================ #
 # Tensors and Variables - Code End                                             |
