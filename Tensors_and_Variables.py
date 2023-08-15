@@ -393,7 +393,7 @@ if __name__ == "__main__":
     # as they operate slightly differently.
 
 
-    # Sparse Tensors
+    # Sparse Tensors:
     # ----------------------------
     # These methods are applied when data contains mostly zeroes. We have methods
     # that can efficiently process and store sparse tensors.
@@ -402,11 +402,44 @@ if __name__ == "__main__":
     # of the values in the array, and the dense_shape determines the shape of the
     # the dense tensor that is made of it.
     sparse_tensor_2d = tf.sparse.SparseTensor(
-        indicies = [[1, 1], [2, 3]], values = [11, 56], dense_shape = [5, 6]
+        indices = [[1, 1], [2, 3]], values = [11, 56], dense_shape = [5, 6]
     )
 
     # The tf.sparse.to_dense() method turns sparse matricies to dense ones
     dense_sparse_tensor_2d = tf.sparse.to_dense(sparse_tensor_2d)
+
+
+    # String Tensors:
+    # ----------------------------
+    # The tf.strings module allows us to work with string tensors.
+
+    # Like we have above, we create string tensors using tf.constant(), with the
+    # elements of the tensors as strings.
+    str_tensor_1d = tf.constant(["Hello,", " ", "World!"])
+
+    # The tf.strings.join() method allows us to perform element-wise concatenation
+    # of a list of string tensors. You can customise the seperator as you see fit.
+    joined_str_tensor_1d = tf.strings.join(inputs = str_tensor_1d, separator = '', name = None)
+
+    # We can get the length of strings in a tensor via the following:
+    str_tensor_1d_lengths = tf.strings.length(
+        input = str_tensor_1d, unit = "BYTE", name = None
+    )
+
+    # The tf.strings.lower() and tf.strings.upper() methods convert all strings to
+    # upper and lower case characters respectively
+    str_tensor_1d_lower_case =tf.strings.lower(
+        input = str_tensor_1d, encoding = '', name = None
+    )
+
+    str_tensor_1d_upper_case =tf.strings.lower(
+        input = str_tensor_1d, encoding = '', name = None
+    )
+
+    # Tensor Variables:
+    # ----------------------------
+
+    
     
 # ============================================================================ #
 # Tensors and Variables - Code End                                             |
