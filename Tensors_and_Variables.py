@@ -438,9 +438,24 @@ if __name__ == "__main__":
 
     # Tensor Variables:
     # ----------------------------
-
-    
-    
+    # Suppose we have the machine learning model as below:
+    #
+    #                      [        ]
+    #               a_1  / [ F(x_1) ]\
+    # [         ]       /  [        ] \ b_1
+    # [ Pre-    ] [   ]/               \
+    # [ process ] [ x ]                  [ Y ]
+    # [         ] [   ]\               /
+    # [         ]       \  [        ] / b_2
+    #               a_2  \ [ F(x_2) ]/
+    #                      [        ]
+    #
+    # The values a_1, a_2, b_1, and b_2 get updated as the model trains. We need
+    # to use variables which can be updated as we do model training. We use
+    # tf.Variable to create TensorFlow variables. Link to the documentation:
+    # https://www.tensorflow.org/api_docs/python/tf/Variable/.
+    T = tf.constant([3, 1, 4, 1, 5, 9, 6])
+    T_var = tf.Variable(T, name = "var_1", trainable = True) # The tf variable
 # ============================================================================ #
 # Tensors and Variables - Code End                                             |
 # ============================================================================ #
