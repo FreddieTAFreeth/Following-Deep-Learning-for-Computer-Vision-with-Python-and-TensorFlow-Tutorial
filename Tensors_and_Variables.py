@@ -20,6 +20,7 @@ if __name__ == "__main__":
     # The shape of the tensor [[[1 2 0], [3 5 -1]], [[1 5 6], [2 3 8]]] is (2, 2, 3).
     # Note how the length of the tuple is the depth of the tensor.
 
+
     # Initialisation and Casting
     # ---------------------------
     tensor_0d = tf.constant(8) # prints as tf.Tensor(8, shape=(), dtype=int32)
@@ -91,12 +92,12 @@ if __name__ == "__main__":
     # done like: myTensor[min : max + 1 : step]. Similar to R, you can extract
     # rows and columns by specifying indicies: myTensor[rows, columns].
     # print(tensor_2d)
-    # print(tensor_2d[:,1]) # Second column
+    # print(tensor_2d[:, 1]) # Second column
     # print(tensor_2d[3, :]) # Last row
 
     # Indexing scales up for arbitrary tensor sizes.
     # print(tensor_3d)
-    # print(tensor_3d[:,:,2])
+    # print(tensor_3d[:, :, 2])
 
 
     # Tensorflow Math Functions:
@@ -396,6 +397,16 @@ if __name__ == "__main__":
     # ----------------------------
     # These methods are applied when data contains mostly zeroes. We have methods
     # that can efficiently process and store sparse tensors.
+
+    # WE can create a sparse tensor as follows. Indicies insidcate the coordinates
+    # of the values in the array, and the dense_shape determines the shape of the
+    # the dense tensor that is made of it.
+    sparse_tensor_2d = tf.sparse.SparseTensor(
+        indicies = [[1, 1], [2, 3]], values = [11, 56], dense_shape = [5, 6]
+    )
+
+    # The tf.sparse.to_dense() method turns sparse matricies to dense ones
+    dense_sparse_tensor_2d = tf.sparse.to_dense(sparse_tensor_2d)
     
 # ============================================================================ #
 # Tensors and Variables - Code End                                             |
