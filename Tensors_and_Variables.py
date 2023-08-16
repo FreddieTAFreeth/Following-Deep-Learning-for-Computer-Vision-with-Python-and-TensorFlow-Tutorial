@@ -436,6 +436,7 @@ if __name__ == "__main__":
         input = str_tensor_1d, encoding = '', name = None
     )
 
+
     # Tensor Variables:
     # ----------------------------
     # Suppose we have the machine learning model as below:
@@ -454,8 +455,47 @@ if __name__ == "__main__":
     # to use variables which can be updated as we do model training. We use
     # tf.Variable to create TensorFlow variables. Link to the documentation:
     # https://www.tensorflow.org/api_docs/python/tf/Variable/.
-    T = tf.constant([3, 1, 4, 1, 5, 9, 6])
-    T_var = tf.Variable(T, name = "var_1", trainable = True) # The tf variable
+    x = tf.constant([1, 0, 2]) # Traditional way to declare a variable
+    x_var = tf.Variable(x, name = "var_T", trainable = True) # The tf variable
+
+    # We can then modify the variables as so:
+    x_var.assign_sub([-1, 4,  0]) # Substracts [-1, 4, 0] from T_var
+    x_var.assign_add([ 1, 0, -1]) # Adds [1, 0, -1] to var_T
+    # More methods for this concept are in the documentation.
+
+    # You cancustomise what "device" you want the variable to be defined on. This
+    # includes the CPU, GPU
+    with tf.device("CPU:0"):
+        x_var_CPU = tf.Variable(1.618)
+        x_tensor_CPU = tf.constant([1, 2, 3])
+
+    with tf.device("GPU:0"):
+        x_var_GPU = tf.Variable(3.141)
+        x_tensor_GPU = tf.constant([4, 5, 6])
+
+    # You can print the device what a variable is running on with the .device
+    # method as below:
+    # print(x_var_CPU.device)
+    # print(x_tensor_CPU.device)
+    # print(x_var_GPU.device)
+    # print(x_tensor_GPU.device)
+
+    # To get a list of availiable devices, use tf.config.list_physical_devices()
+    # print(tf.config.list_physical_devices('CPU')) # Prints CPU devices
+    # print(tf.config.list_physical_devices('GPU')) # Prints GPU devices
+
+    # We can first define variables in the CPU, and then do the computations in
+    # the GPU to speed up the program:
+    with tf.device("CPU:0"):
+        x_1 = tf.constant([1,  2, 3, 4])
+        x_2 = tf.constant([1, -1, 0, 1])
+
+    with tf.device("GPU:0"):
+        x_3 = x_1 * x_1 + x_2
+
+    # Note that for machines with multiple CPU/GPUs, the number followed by ":"
+    # is the number of that CPU/GPU in that system.
+    
 # ============================================================================ #
 # Tensors and Variables - Code End                                             |
 # ============================================================================ #
