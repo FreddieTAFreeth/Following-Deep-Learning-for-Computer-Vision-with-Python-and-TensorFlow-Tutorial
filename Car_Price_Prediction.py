@@ -8,6 +8,7 @@ import csv
 import tensorflow as tf
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
     
@@ -72,7 +73,14 @@ if __name__ == "__main__":
 
     # Read in the data
     car_data = pd.read_csv("Car_Prices.csv", sep = ",")
-    
+
+    # Basic data investigation:
+    pairplot = pd.plotting.scatter_matrix(
+        car_data, figsize = (5, 5), marker = 'o',
+        hist_kwds = {'bins': 1000}, s = 120, alpha = 0.4
+    )
+    plt.show()
+
 # ============================================================================ #
 # Car Price Prediction - Code End                                              |
 # ============================================================================ #
