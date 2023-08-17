@@ -4,6 +4,7 @@
 # ============================================================================ #
 # Following https://www.youtube.com/watch?v=IA3WxTTPXqQ.
 
+import csv
 import tensorflow as tf
 import numpy as np
 
@@ -48,11 +49,28 @@ if __name__ == "__main__":
     #
     # Data Preparation:
     # -----------------
-    # Data Source: Mayank Patel, Kaggle.
+    # Data Source: Mayank Patel, Kaggle. Note: I have removed the "on road old"
+    # and the "on road now" features of the dataset.
     # https://www.kaggle.com/datasets/mayankpatel14/second-hand-used-cars-data-set-linear-regression
     #
-    # 
+    # Ignoring vehicle ID ("v.id"), our input X is a tensor of shape (N = 1000, 8)
+    # and our output tensor Y is a tensor of shape (N = 1000, 1), since the data
+    # has the following structure:
+    #
+    #         |------------------------------- X -----------------------------| |----- Y -----|
+    # __________________________________________________________________________________________
+    # | v.id  years  km	     rating  condition  economy  top speed  hp  torque | current price |
+    # | ---------------------------------------------------------------------- | ------------- |
+    # | 1     3	      78945  1       2	        14	 177	    73  123    | 351318        |
+    # | 2     6	     117220  5	     9	         9	 148	    74  95     | 285001.5      |
+    # | 3     2	     132538  2	     8	        15	 181	    53  97     | 215386        |
+    # | ...   ...    ...     ...     ...        ...      ...        ... ...    | ...           |
+    # ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+    # We can now begin with reading in the model data.
 
+    with open("Car_Prices.csv", mode = "r") as file:
+        car_data = csv.reader(file)
+        # for lines in car_data: print(lines) # Print the lines of data file
 # ============================================================================ #
 # Car Price Prediction - Code End                                              |
 # ============================================================================ #
