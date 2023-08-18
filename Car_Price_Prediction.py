@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ============================================================================ #
-# Car Price Prediction - Frederick T. A. Freeth                     17/08/2023 |
+# Car Price Prediction - Frederick T. A. Freeth                     18/08/2023 |
 # ============================================================================ #
 # Following https://www.youtube.com/watch?v=IA3WxTTPXqQ.
 
@@ -9,6 +9,7 @@ import tensorflow as tf
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from tensorflow.keras.layers import Normalization
 
 if __name__ == "__main__":
     
@@ -34,7 +35,7 @@ if __name__ == "__main__":
     # predict two values given an input of car engine horsepower.
     # ___________________________________________________
     # | X(hp) | 109, 144,   113,   97,    ... , 80, 150 |
-    # | Y(K$) |   8,   9.3,   7.5,  8.89, ... ,  ?,   ? |
+    # | Y($)  |   8,   9.3,   7.5,  8.89, ... ,  ?,   ? |
     # ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
     # We can then have two versions of a model we want to make (Note well the
     # direction of the arrows):
@@ -63,11 +64,11 @@ if __name__ == "__main__":
     # __________________________________________________________________________________________
     # | v.id  years  km	     rating  condition  economy  top speed  hp  torque | current price |
     # | ---------------------------------------------------------------------- | ------------- | _
-    # |    1   3      78945    1       2           14    177        73  123    | 351318        | |
-    # |    2   6     117220    5       9            9    148        74   95    | 285001.5      | |
-    # |    3   2     132538    2       8           15    181        53   97    | 215386        | N
-    # |  ... ...        ...  ...     ...          ...    ...       ...  ...    |    ...        | |
-    # | 1000   5      67295    4       2            8    199        99   96    | 414938.5      | |
+    # |    1    3     78945    1       2           14    177        73  123    | 351318        | |
+    # |    2    6    117220    5       9            9    148        74   95    | 285001.5      | |
+    # |    3    2    132538    2       8           15    181        53   97    | 215386        | N
+    # |  ...  ...       ...  ...     ...          ...    ...       ...  ...    |    ...        | |
+    # | 1000    5     67295    4       2            8    199        99   96    | 414938.5      | |
     # ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾ ‾
     # We can now begin with reading in the model data, and converting it to a tensor.
 
@@ -80,6 +81,29 @@ if __name__ == "__main__":
         hist_kwds = {'bins': 1000}, s = 120, alpha = 0.4
     )
     plt.show()
+    # We can see boraadly there aren't many patturns we can see. However, we can
+    # observe that as car distance travelled (in km) increases, so does the value
+    # of the car.
+
+    # We now convert the data to a tensor of float32 types:
+    car_data_tensor = tf.cast(x = tf.constant(car_data), dtype = "float32")
+
+    # We also shuffle the rows of the data to remove any potential underlying
+    # biases arising from how the data was collected:
+    car_data_tensor = tf.random.shuffle(car_data_tensor)
+
+    # For our model above, we extract our data X and Y. For Y, we use the
+    # tf.expand_dims method to turn it into a column tensor
+    X = car_data_tensor[:, 0:8]
+    Y = tf.expand_dims(input = car_data_tensor[:, 9], axis = 1)
+
+    # To help the data train faster, we can normalise the inputs, X. We normalise
+    # by subtracting from the mean and dividing by the variance which is the
+    # square of the standard deviation: X ^ {tilde} = (X - μ) / (σ ^ 2):
+    normaliser = Normalization() # Init normaliser
+    normaliser.adapt(X) # Find the mean and standard deviation of each column
+    X_normalised = normaliser(X) # Normalise the data
+    
 
 # ============================================================================ #
 # Car Price Prediction - Code End                                              |
