@@ -9,7 +9,7 @@ import tensorflow as tf
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from tensorflow.keras.layers import Normalization
+from tensorflow.keras.layers import Normalization, Dense
 
 if __name__ == "__main__":
     
@@ -95,7 +95,7 @@ if __name__ == "__main__":
     # For our model above, we extract our data X and Y. For Y, we use the
     # tf.expand_dims method to turn it into a column tensor
     X = car_data_tensor[:, 0:8]
-    Y = tf.expand_dims(input = car_data_tensor[:, 9], axis = 1)
+    y = tf.expand_dims(input = car_data_tensor[:, 9], axis = 1)
 
     # To help the data train faster, we can normalise the inputs, X. We normalise
     # by subtracting from the mean and dividing by the variance which is the
@@ -103,6 +103,36 @@ if __name__ == "__main__":
     normaliser = Normalization() # Init normaliser
     normaliser.adapt(X) # Find the mean and standard deviation of each column
     X_normalised = normaliser(X) # Normalise the data
+
+    # Essentially, for each feature from X, say x (lower case x), we can compare
+    # it to y via a plot y = mx + c assuming a linear regression. This equation
+    # allows us to extrapolate and predict values of y in x for which we have
+    # no data on. Here, m is the gradient of out line, but in the context of
+    # machine learning, this is called the weights. The value c is the y-intercept
+    # and this is called the bias. In summary, y = m X + c is the model. We are
+    # trying to train the model such that the values of m and c accurately fit
+    # the data (i.e. that best represents the data). To build the machine learning
+    # model, we use the Keras Sequential API. We want our model to have a
+    # normalisation layer and a dense layer:
+    #
+    #  Inputs            Model Layers            Outputs
+    #  ‾‾‾‾‾‾    [       ‾‾‾‾‾‾‾‾‾‾‾‾       ]    ‾‾‾‾‾‾‾
+    #  [   ]     [ [       ]      [       ] ]     [   ]
+    #  [ X ] --> [ [ Norm. ] ---> [ Dense ] ] --> [ y ]
+    #  [   ]     [ [       ]      [       ] ]     [   ]
+    #            [                          ]
+    #
+    # Our inputs need to be normalised before being used in the dene layer, which
+    # is why we need the normalisation layer. To gain an understanding as to why
+    # we use the dense layer and what it does, consider the following. Recall
+    # that that we take an input x, multiply it by a weight, and then add a bias.
+    # So, mx + c = y_p which is our predicted value
+    
+    model = tf.keras.Sequential([
+        normaliser,
+        Dense(1),
+    ])
+    
     
 
 # ============================================================================ #
