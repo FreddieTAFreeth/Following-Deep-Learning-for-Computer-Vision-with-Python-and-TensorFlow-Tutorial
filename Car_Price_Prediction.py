@@ -15,7 +15,7 @@ from tensorflow.keras.losses import MeanSquaredError, MeanAbsoluteError, Huber
 if __name__ == "__main__":
     
     # The Task:
-    # ---------------------
+    # --------------------------
     # We want to predict the price of second-hand cars given several input features.
     # Owners of these cars will specify:
     # - "years": how old the car is,
@@ -30,7 +30,7 @@ if __name__ == "__main__":
     #
     #
     # The Model:
-    # ---------------------
+    # --------------------------
     # Consider the data of car engine horsepower (hp) and price ($) of the car.
     # Suppose X is the model input, and Y is the model output. We want to then
     # predict two values given an input of car engine horsepower.
@@ -52,7 +52,7 @@ if __name__ == "__main__":
     #
     #
     # Data Preparation:
-    # ---------------------
+    # --------------------------
     # Data Source: Mayank Patel, Kaggle.
     # https://www.kaggle.com/datasets/mayankpatel14/second-hand-used-cars-data-set-linear-regression
     # Note: I have removed the "on road old" and the "on road now" features of the dataset.
@@ -171,16 +171,17 @@ if __name__ == "__main__":
     ])
     # model.summary() # View the model summary
     # tf.keras.utils.plot_model(model, show_shapes = True) # View model layer plot
-
+    #
+    #
     # Model Error Analysis:
-    # ---------------------
+    # --------------------------
     # We want to see how well our model, the best fit line, compares with the
     # actual data. Remember that for each input point in X, the model produces
     # an estimate y_p which is the predicted value. Putting in existing values
     # from our data, we can see how the model compares to the real-world data.
     # Which we define to be y_a:
     #
-    #              _     y          y = m_1 x_1 + c
+    #              _     y          y = m x + c
     #              | y_a |---- .  ./.
     #  abs. Error  |     |     |. / .
     #  |y_a - y_p| |     |  .  | / .
@@ -199,10 +200,11 @@ if __name__ == "__main__":
     # can choose a loss function to be Loss(y_a, y_p) = (y_a - y_p) ^ 2. An
     # error function measures deviations from an observable value (y_a) from a
     # predicted value (y_p), and a loss function is an operation on the error
-    # to quantify the severity of a loss of a particular value. Note that in
+    # to quantify the severity of a loss of a particular value, a "cost of being
+    # wrong" so to speak which is why it is also written as a cost function. In
     # some cases, absolute errors are not used and errors with signs, either
-    # positive, negative, or zero, are used and can have different cases in a
-    # loss function.
+    # positive, negative, or zero, are used and can have different meanings in a
+    # loss/cost function.
     #
     # The function Loss(y_a, y_p) = (y_a - y_p) ^ 2 is known as the "Mean Square
     # Error" Loss function. In our model, we want to find all the errors across
@@ -229,6 +231,41 @@ if __name__ == "__main__":
         # loss = MeanSquaredError()
         # loss = Huber()
     )
+
+
+    # Training and Optimisation:
+    # --------------------------
+    # In our graph above, we want to find the values of the weights and bias m
+    # and c such that the regression line best fits the data, determined by the
+    # lowest mean absolute/squared error (or Huber method or some other way).
+    # There are uncountably infinitely many combinations for weights and biases.
+    # We first initialise random weights and biases, although there are ways of
+    # seeding reasonable values to make the model converge faster. The method
+    # currently to minimise error used is called "Stochastic Gradient Descent".
+    # Since the values of the cost function form a surface over our N = 8
+    # dimensional space, we will want to find the minima of this surface, which
+    # are the lowest points on this surface. In a one dimensional case, think
+    # some polynomial like y = x^2. Its minimal value is found by computing its
+    # (partial) derivative ∂y/∂x = ∂/∂x [x^2] = 2x. For higher degree polynomials
+    # this will give the locations of minimal values but not neccessarily the
+    # smallest minima.
+    # 
+    # Instead, what we can do is to step either left or right depending on the
+    # sign on the derivative and make these steps proportional to the magitude
+    # of the gradient. So, very negative gradients will imply that a local
+    # minimum is to the right, and very positive gradients will imply a left
+    # local minima. Doing this repeatedly will ensure convergence to a minima.
+    # Note that finding a local minima is generally very doable but finding the
+    # global minima is very difficult.
+    #
+    # In stochastic gradient descent on N-dimensional hypersurfaces, we want to
+    # find the direction which decreases the cost function the fastest. From
+    # multivariable calculus, the gradient function tells us the direction which
+    # increases the function most quickly, so the negative of this will be the
+    # direction of the function that decreases it most quickly. It is denoted
+    # by -∇[ . ]. So, we compute ∇[Loss(y_a, y_b)], step in the direction of
+    # -∇[Loss(y_a, y_b)], and repeat until we approach a local minima.
+    
     
 # ============================================================================ #
 # Car Price Prediction - Code End                                              |
