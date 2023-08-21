@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from tensorflow.keras.layers import InputLayer, Normalization, Dense
-from tensorflow.keras.losses import MeanSquaredError
+from tensorflow.keras.losses import MeanSquaredError, MeanAbsoluteError, Huber
 
 if __name__ == "__main__":
     
@@ -180,7 +180,7 @@ if __name__ == "__main__":
     # from our data, we can see how the model compares to the real-world data.
     # Which we define to be y_a:
     #
-    #              _     y
+    #              _     y          y = m_1 x_1 + c
     #              | y_a |---- .  ./.
     #  abs. Error  |     |     |. / .
     #  |y_a - y_p| |     |  .  | / .
@@ -189,7 +189,7 @@ if __name__ == "__main__":
     #              ‾     |. . /|      .
     #                    | . / |    .
     #                    |  / .| .
-    #                    | /.  |   .
+    #                    | /.  |   . <-- (1)
     #                    |/  . |
     #                    | .   |                  X
     #                    ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
@@ -208,9 +208,27 @@ if __name__ == "__main__":
     # Error" Loss function. In our model, we want to find all the errors across
     # all points between the real and predicted in our dataset, and find the
     # average. We ca do this with the tf.keras.losses.MeanSquaredError() method.
-    # There are many other types of loss functions in the documentation.
-    
-    model.compile(loss = MeanSquaredError())
+    # There are many other types of loss functions in the documentation. For
+    # example, the mean abolute error takes the absolute difference between y_a
+    # and y_p and finds the mean across all data points. This has an advantage
+    # in that large errors do not have as large losses compared to the mean
+    # squared error loss function, since the error is squared in the latter.
+    # This means that the gradient of the curve (given by the m's) is not heavily
+    # influenced by outliers data points such as (1) in the ASCII chart above.
+    #
+    # We can use the mean squared error and mean absolute error more intelligently.
+    # We'll use the mean square error for datapoints close to the regression line
+    # and then the mean absolute error for outlier points. This technique is called
+    # the "Huber Loss" function. We can use it via the tf.keras.losses.Huber()
+    # method, and will switch between using MSE and MAE if the error is greater
+    # than a value delta.
+
+    # Compile the model with a specific loss function
+    model.compile(
+        loss = MeanAbsoluteError
+        # loss = MeanSquaredError()
+        # loss = Huber()
+    )
     
 # ============================================================================ #
 # Car Price Prediction - Code End                                              |
