@@ -163,7 +163,13 @@ if __name__ == "__main__":
     # at once is due to the fact that if a dataset is several terabytes (TB), and
     # the computer you are working from only has RAM on the order of tens to
     # hundreds of gigabytes, then you cannot store and compute all of the data
-    # all at once.
+    # all at once. In this toy example, the data is very small so we wouldn't
+    # actually need to run it in batches, but for the sake of education, we will.
+    # A topic to come back to and subject of research is that large batch sizes
+    # will make a model converge quicker, however large batch sizes can cause
+    # overfitting.
+
+    
 
 # ============================================================================ #
 # Car Price Prediction - Code End                                              |
