@@ -122,18 +122,37 @@ if __name__ == "__main__":
     #  [   ]     [ [       ]      [       ] ]     [   ]
     #            [                          ]
     #
-    # Our inputs need to be normalised before being used in the dene layer, which
-    # is why we need the normalisation layer. To gain an understanding as to why
-    # we use the dense layer and what it does, consider the following. Recall
-    # that that we take an input x, multiply it by a weight, and then add a bias.
-    # So, mx + c = y_p which is our predicted value
+    # Our inputs need to be normalised before being used in the dense layer, which
+    # is why we need the normalisation layer. The dense layer is a fully connected
+    # layer, meaning that each neuron from the previous layer is connected to a
+    # neuron in the dense layer forming a bijection between the two layers. What
+    # it does is that that it takes an input x, multiply it by a weight, and then
+    # add a bias. So, mx + c = y_p which is our predicted value of y. For M = 8
+    # features, we connect 8 neurons from the input layer into the normalisation
+    # layer which has the same shape as the input so we can normalise each value.
+    # From here, these normalised inputs pass into the dense layer which has an
+    # output shape of 1, since we want to know what a predicted car's price is.
+    # This predicted price is a singular number, which is why the dense layer
+    # must have an output of shape of 1.
+
+    # Between the normalisation and dense layers, each normalised input neuron
+    # is multiplied by the weight and summed up and added with a weight which is
+    # the value of the Dense(1) layer:
+    #
+    #  x_1 x_2 x_3 x_4 x_5 x_6 x_7 x_8
+    #   ○   ○   ○   ○   ○   ○   ○   ○ Normalisation Layer
+    #    \   \   \   \ /   /   /   /  m_8
+    #                 ○               Dense(1) Layer
+    #  m_1 m_2 m_3 m_4 m_5 m_6 m_7 m_8
+    #
+    # Value of Dense(1): m_1 x_1 + m_2 x_2 + ... + m_8 x_8 + c. We have 8 weights
+    # and one bias, so in total we have 9 total trainable variables.
     
     model = tf.keras.Sequential([
-        normaliser,
-        Dense(1),
+        normaliser, # Normalisation layer - has output shape (None, 8)
+        Dense(1),   # Single dense neuron layer - has output shape (None, 1)
     ])
-    
-    
+    # model.summary() View the model summary
 
 # ============================================================================ #
 # Car Price Prediction - Code End                                              |
