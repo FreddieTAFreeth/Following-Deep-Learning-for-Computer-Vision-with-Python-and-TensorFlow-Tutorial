@@ -152,7 +152,18 @@ if __name__ == "__main__":
         normaliser, # Normalisation layer - has output shape (None, 8)
         Dense(1),   # Single dense neuron layer - has output shape (None, 1)
     ])
-    # model.summary() View the model summary
+    # model.summary() # View the model summary
+    # tf.keras.utils.plot_model(model, show_shapes = True) # View model layer plot
+
+    # You may notice that the dimensions of the neuron layers have "None" in
+    # them. In the inputs, this is the "batch size" of the model. Since ours is
+    # None, it means it is unspecified. However, with large datasets, it is not
+    # possible to train the entire dataset at once; so, we train the model with
+    # batches of our data. The reason it is not possible to train entire datasets
+    # at once is due to the fact that if a dataset is several terabytes (TB), and
+    # the computer you are working from only has RAM on the order of tens to
+    # hundreds of gigabytes, then you cannot store and compute all of the data
+    # all at once.
 
 # ============================================================================ #
 # Car Price Prediction - Code End                                              |
