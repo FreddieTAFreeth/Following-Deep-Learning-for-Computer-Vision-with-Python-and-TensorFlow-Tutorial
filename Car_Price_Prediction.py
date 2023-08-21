@@ -263,8 +263,10 @@ if __name__ == "__main__":
     # multivariable calculus, the gradient function tells us the direction which
     # increases the function most quickly, so the negative of this will be the
     # direction of the function that decreases it most quickly. It is denoted
-    # by -∇[ . ]. So, we compute ∇[Loss(y_a, y_b)], step in the direction of
-    # -∇[Loss(y_a, y_b)], and repeat until we approach a local minima.
+    # by -∇[ ]. So, we compute ∇[Loss(y_a, y_b)], step in the direction of
+    # -∇[Loss(y_a, y_b)], and repeat until we approach a local minima. The
+    # components of -∇[Loss(y_a, y_b)] tell us which features need increasing
+    # or decreasing.
     
     
 # ============================================================================ #
