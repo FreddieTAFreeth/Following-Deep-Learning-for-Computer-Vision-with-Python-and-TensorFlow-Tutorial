@@ -14,7 +14,7 @@ from tensorflow.keras.layers import InputLayer, Normalization, Dense
 if __name__ == "__main__":
     
     # The Task:
-    # ------------------
+    # ---------------------
     # We want to predict the price of second-hand cars given several input features.
     # Owners of these cars will specify:
     # - "years": how old the car is,
@@ -29,7 +29,7 @@ if __name__ == "__main__":
     #
     #
     # The Model:
-    # ------------------
+    # ---------------------
     # Consider the data of car engine horsepower (hp) and price ($) of the car.
     # Suppose X is the model input, and Y is the model output. We want to then
     # predict two values given an input of car engine horsepower.
@@ -45,13 +45,13 @@ if __name__ == "__main__":
     # 2)  [ X ] ---> [ Model ] ---> [ Y ]
     #
     # In (1), the model is fed both the input and the output. In (2), the model
-    # is fed an input, and then an output is produced. Thia first stage is the
+    # is fed an input, and then an output is produced. This first stage is the
     # model training step. Once the model is trained, we can then supply the
     # inputs to get our predicted output.
     #
     #
     # Data Preparation:
-    # ------------------
+    # ---------------------
     # Data Source: Mayank Patel, Kaggle.
     # https://www.kaggle.com/datasets/mayankpatel14/second-hand-used-cars-data-set-linear-regression
     # Note: I have removed the "on road old" and the "on road now" features of the dataset.
@@ -81,7 +81,7 @@ if __name__ == "__main__":
         hist_kwds = {'bins': 1000}, s = 120, alpha = 0.4
     )
     plt.show()
-    # We can see boraadly there aren't many patturns we can see. However, we can
+    # We can see broadly there aren't many patturns we can see. However, we can
     # observe that as car distance travelled (in km) increases, so does the value
     # of the car.
 
@@ -171,9 +171,31 @@ if __name__ == "__main__":
     # model.summary() # View the model summary
     # tf.keras.utils.plot_model(model, show_shapes = True) # View model layer plot
 
-    # Error Sanctioning:
-    # ------------------
-
+    # Model Error Analysis:
+    # ---------------------
+    # We want to see how well our model, the best fit line, compares with the
+    # actual data. Remember that for each input point in X, the model produces
+    # an estimate y_p which is the predicted value. Putting in existing values
+    # from our data, we can see how the model compares to the real-world data.
+    # Which we define to be y_a:
+    #
+    #              _     y
+    #              | y_a |---- .  ./.
+    #  abs. Error  |     |     |. / .
+    #  |y_a - y_p| |     |  .  | / .
+    #              |     |    .|/
+    #              | y_p |-----/  .
+    #              ‾     |. . /|      .
+    #                    | . / |    .
+    #                    |  / .| .
+    #                    | /.  |   .
+    #                    |/  . |
+    #                    | .   |                  X
+    #                    ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+    # Note that we an absolute error |y_a - y_p| between the predicted and the
+    # real-world values. What we want to do is minimise the error as much as
+    # possible. We can customise the error function to what ever we like. We
+    # choose an error function (y_a - y_p) ^ 2.
 # ============================================================================ #
 # Car Price Prediction - Code End                                              |
 # ============================================================================ #
