@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ============================================================================ #
-# Car Price Prediction - Frederick T. A. Freeth                     18/08/2023 |
+# Car Price Prediction - Frederick T. A. Freeth                     21/08/2023 |
 # ============================================================================ #
 # Following https://www.youtube.com/watch?v=IA3WxTTPXqQ.
 
@@ -9,12 +9,12 @@ import tensorflow as tf
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from tensorflow.keras.layers import Normalization, Dense
+from tensorflow.keras.layers import InputLayer, Normalization, Dense
 
 if __name__ == "__main__":
     
     # The Task:
-    # -----------------
+    # ------------------
     # We want to predict the price of second-hand cars given several input features.
     # Owners of these cars will specify:
     # - "years": how old the car is,
@@ -29,7 +29,7 @@ if __name__ == "__main__":
     #
     #
     # The Model:
-    # -----------------
+    # ------------------
     # Consider the data of car engine horsepower (hp) and price ($) of the car.
     # Suppose X is the model input, and Y is the model output. We want to then
     # predict two values given an input of car engine horsepower.
@@ -51,7 +51,7 @@ if __name__ == "__main__":
     #
     #
     # Data Preparation:
-    # -----------------
+    # ------------------
     # Data Source: Mayank Patel, Kaggle.
     # https://www.kaggle.com/datasets/mayankpatel14/second-hand-used-cars-data-set-linear-regression
     # Note: I have removed the "on road old" and the "on road now" features of the dataset.
@@ -134,27 +134,20 @@ if __name__ == "__main__":
     # output shape of 1, since we want to know what a predicted car's price is.
     # This predicted price is a singular number, which is why the dense layer
     # must have an output of shape of 1.
-
+    #
     # Between the normalisation and dense layers, each normalised input neuron
     # is multiplied by the weight and summed up and added with a weight which is
     # the value of the Dense(1) layer:
     #
     #  x_1 x_2 x_3 x_4 x_5 x_6 x_7 x_8
-    #   ○   ○   ○   ○   ○   ○   ○   ○ Normalisation Layer
-    #    \   \   \   \ /   /   /   /  m_8
-    #                 ○               Dense(1) Layer
+    #   ○   ○   ○   ○   ○   ○   ○   ○   Normalisation Layer
+    #    \   \   \   \ /   /   /   /
+    #                 ○                 Dense(1) Layer
     #  m_1 m_2 m_3 m_4 m_5 m_6 m_7 m_8
     #
     # Value of Dense(1): m_1 x_1 + m_2 x_2 + ... + m_8 x_8 + c. We have 8 weights
     # and one bias, so in total we have 9 total trainable variables.
-    
-    model = tf.keras.Sequential([
-        normaliser, # Normalisation layer - has output shape (None, 8)
-        Dense(1),   # Single dense neuron layer - has output shape (None, 1)
-    ])
-    # model.summary() # View the model summary
-    # tf.keras.utils.plot_model(model, show_shapes = True) # View model layer plot
-
+    #
     # You may notice that the dimensions of the neuron layers have "None" in
     # them. In the inputs, this is the "batch size" of the model. Since ours is
     # None, it means it is unspecified. However, with large datasets, it is not
@@ -169,7 +162,17 @@ if __name__ == "__main__":
     # will make a model converge quicker, however large batch sizes can cause
     # overfitting.
 
-    
+    batch_size = 5
+    model = tf.keras.Sequential([
+        InputLayer(input_shape = (batch_size, 8))
+        normaliser, # Normalisation layer - has output shape (None, 8)
+        Dense(1),   # Single dense neuron layer - has output shape (None, 1)
+    ])
+    # model.summary() # View the model summary
+    # tf.keras.utils.plot_model(model, show_shapes = True) # View model layer plot
+
+    # Error Sanctioning:
+    # ------------------
 
 # ============================================================================ #
 # Car Price Prediction - Code End                                              |
