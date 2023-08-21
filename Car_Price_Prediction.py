@@ -10,6 +10,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from tensorflow.keras.layers import InputLayer, Normalization, Dense
+from tensorflow.keras.losses import MeanSquaredError
 
 if __name__ == "__main__":
     
@@ -164,7 +165,7 @@ if __name__ == "__main__":
 
     batch_size = 5
     model = tf.keras.Sequential([
-        InputLayer(input_shape = (batch_size, 8))
+        InputLayer(input_shape = (batch_size, 8)),
         normaliser, # Normalisation layer - has output shape (None, 8)
         Dense(1),   # Single dense neuron layer - has output shape (None, 1)
     ])
@@ -195,7 +196,22 @@ if __name__ == "__main__":
     # Note that we an absolute error |y_a - y_p| between the predicted and the
     # real-world values. What we want to do is minimise the error as much as
     # possible. We can customise the error function to what ever we like. We
-    # choose an error function (y_a - y_p) ^ 2.
+    # can choose a loss function to be Loss(y_a, y_p) = (y_a - y_p) ^ 2. An
+    # error function measures deviations from an observable value (y_a) from a
+    # predicted value (y_p), and a loss function is an operation on the error
+    # to quantify the severity of a loss of a particular value. Note that in
+    # some cases, absolute errors are not used and errors with signs, either
+    # positive, negative, or zero, are used and can have different cases in a
+    # loss function.
+    #
+    # The function Loss(y_a, y_p) = (y_a - y_p) ^ 2 is known as the "Mean Square
+    # Error" Loss function. In our model, we want to find all the errors across
+    # all points between the real and predicted in our dataset, and find the
+    # average. We ca do this with the tf.keras.losses.MeanSquaredError() method.
+    # There are many other types of loss functions in the documentation.
+    
+    model.compile(loss = MeanSquaredError())
+    
 # ============================================================================ #
 # Car Price Prediction - Code End                                              |
 # ============================================================================ #
