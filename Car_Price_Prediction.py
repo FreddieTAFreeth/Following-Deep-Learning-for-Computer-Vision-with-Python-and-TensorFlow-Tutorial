@@ -225,11 +225,14 @@ if __name__ == "__main__":
     # method, and will switch between using MSE and MAE if the error is greater
     # than a value delta.
 
-    # Compile the model with a specific loss function
+    # Compile the model with a specific loss function. In tf.keras.optimizers,
+    # there are different optimisation algorithms to choose from. We will
+    # discuss optimisers in the nxt section.
     model.compile(
-        loss = MeanAbsoluteError()
+        optimizer = tf.keras.optimizers.SGD(learning_rate = 0.01),
+        # loss = MeanAbsoluteError()
         # loss = MeanSquaredError()
-        # loss = Huber()
+        loss = Huber()
     )
 
 
