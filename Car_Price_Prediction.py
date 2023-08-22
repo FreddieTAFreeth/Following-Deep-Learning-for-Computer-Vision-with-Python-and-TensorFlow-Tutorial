@@ -97,13 +97,7 @@ if __name__ == "__main__":
     # tf.expand_dims method to turn it into a column tensor
     X = car_data_tensor[:, 0:8]
     y = tf.expand_dims(input = car_data_tensor[:, 9], axis = 1)
-
-    # To help the data train faster, we can normalise the inputs, X. We normalise
-    # by subtracting from the mean and dividing by the variance which is the
-    # square of the standard deviation: X ^ {tilde} = (X - μ) / (σ ^ 2):
-    normaliser = Normalization() # Init normaliser
-    normaliser.adapt(X) # Find the mean and standard deviation of each column
-    X_normalised = normaliser(X) # Normalise the data
+    
 
     # Essentially, for each feature from X, say x (lower case x), we can compare
     # it to y via a plot y = mx + c assuming a linear regression. This equation
@@ -124,17 +118,19 @@ if __name__ == "__main__":
     #            [                          ]
     #
     # Our inputs need to be normalised before being used in the dense layer, which
-    # is why we need the normalisation layer. The dense layer is a fully connected
-    # layer, meaning that each neuron from the previous layer is connected to a
-    # neuron in the dense layer forming a bijection between the two layers. What
-    # it does is that that it takes an input x, multiply it by a weight, and then
-    # add a bias. So, mx + c = y_p which is our predicted value of y. For M = 8
-    # features, we connect 8 neurons from the input layer into the normalisation
-    # layer which has the same shape as the input so we can normalise each value.
-    # From here, these normalised inputs pass into the dense layer which has an
-    # output shape of 1, since we want to know what a predicted car's price is.
-    # This predicted price is a singular number, which is why the dense layer
-    # must have an output of shape of 1.
+    # is why we need the normalisation layer. Normalising the inputs X can speed
+    # up the training process. We normalise by subtracting the mean and dividing
+    # by the standard deviation: X ^ {tilde} = (X - μ) / (σ ^ 2). The dense layer
+    # is a fully connected layer, meaning that each neuron from the previous layer
+    # is connected to a neuron in the dense layer forming a bijection between the
+    # two layers. What it does is that that it takes an input x, multiply it by a
+    # weight, and then add a bias. So, mx + c = y_p which is our predicted value
+    # of y. For M = 8 features, we connect 8 neurons from the input layer into
+    # the normalisation layer which has the same shape as the input, so we can
+    # normalise each value. From here, these normalised inputs pass into the
+    # dense layer which has an output shape of 1, since we want to know what a
+    # predicted car's price is. This predicted price is a singular number, which
+    # is why the dense layer must have an output of shape of 1.
     #
     # Between the normalisation and dense layers, each normalised input neuron
     # is multiplied by the weight and summed up and added with a weight which is
@@ -164,15 +160,19 @@ if __name__ == "__main__":
     # overfitting.
 
     batch_size = 5
+    normaliser = Normalization() # Init normaliser
+    normaliser.adapt(X) # Find the mean and standard deviation of each column
+
+    # Build the neural network model
     model = tf.keras.Sequential([
-        InputLayer(input_shape = (batch_size, 8)),
+        InputLayer(input_shape = (8, )),
         normaliser, # Normalisation layer - has output shape (None, 8)
         Dense(1),   # Single dense neuron layer - has output shape (None, 1)
     ])
     # model.summary() # View the model summary
     # tf.keras.utils.plot_model(model, show_shapes = True) # View model layer plot
-    #
-    #
+
+    
     # Model Error Analysis:
     # --------------------------
     # We want to see how well our model, the best fit line, compares with the
@@ -227,7 +227,7 @@ if __name__ == "__main__":
 
     # Compile the model with a specific loss function
     model.compile(
-        loss = MeanAbsoluteError
+        loss = MeanAbsoluteError()
         # loss = MeanSquaredError()
         # loss = Huber()
     )
@@ -284,8 +284,8 @@ if __name__ == "__main__":
     # times we will perform the gradient descent step. The fit method in the
     # tf.keras.Model class allows us to train our neural network.
     
-    # Train the neural network
-    model.fit(X, y, epochs = 100, verbose = 1)
+    # Train the neural network with batch_size batches and 100 epochs
+    model.fit(X, y, batch_size = batch_size, epochs = 100, verbose = 1)
     
 # ============================================================================ #
 # Car Price Prediction - Code End                                              |
