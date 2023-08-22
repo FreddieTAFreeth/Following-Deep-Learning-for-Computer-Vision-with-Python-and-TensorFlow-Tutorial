@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ============================================================================ #
-# Car Price Prediction - Frederick T. A. Freeth                     21/08/2023 |
+# Car Price Prediction - Frederick T. A. Freeth                     22/08/2023 |
 # ============================================================================ #
 # Following https://www.youtube.com/watch?v=IA3WxTTPXqQ.
 
@@ -266,7 +266,7 @@ if __name__ == "__main__":
     # by -∇[ ]. So, we compute ∇[Loss(y_a, y_b)], step in the direction of
     # -∇[Loss(y_a, y_b)], and repeat until we approach a local minima. The
     # components of -∇[Loss(y_a, y_b)] tell us which features need increasing
-    # or decreasing.
+    # or decreasing and how to reduce the value of the cost function the fastest.
     
     
 # ============================================================================ #
