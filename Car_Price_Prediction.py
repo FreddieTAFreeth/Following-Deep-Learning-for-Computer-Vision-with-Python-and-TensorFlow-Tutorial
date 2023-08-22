@@ -263,11 +263,29 @@ if __name__ == "__main__":
     # multivariable calculus, the gradient function tells us the direction which
     # increases the function most quickly, so the negative of this will be the
     # direction of the function that decreases it most quickly. It is denoted
-    # by -∇[ ]. So, we compute ∇[Loss(y_a, y_b)], step in the direction of
-    # -∇[Loss(y_a, y_b)], and repeat until we approach a local minima. The
-    # components of -∇[Loss(y_a, y_b)] tell us which features need increasing
-    # or decreasing and how to reduce the value of the cost function the fastest.
+    # by -∇[ ]. So, we compute ∇[C(W)] where C(W) is a cost function of the
+    # weights and biases. Telling the computer is is doing badly is not helpful,
+    # so we need to tell the computer how to change the weights and biases to
+    # improve, i.e., reduce, the error and by extension the cost.
+    #
+    # We step in the direction of -∇[C(W)], and repeat until we approach
+    # a local minima. The components of -∇[C(W)] tell us which features need
+    # increasing or decreasing and how to reduce the value of the cost function
+    # the fastest. The formula for stochastic gradient descent is given by the
+    # equation w := w - η ∇[C(W)] for η the "learning rate". In 1 dimension,
+    # this is analagous to finding the gradient of a curve, and then stepping
+    # towards the downhill direction as eluded to above. This process will be
+    # repeated until we achieve sufficient 
+    #
+    # Backpropagation is the way we can calculate this gradient efficently,
+    # since in a a high dimensional space, ∇[C(W)] is very difficult to find.
+    # This involves modifying weights and biases of layers of the neural network
+    # to reduce the value of the cost function. The number of epochs is the
+    # times we will perform the gradient descent step. The fit method in the
+    # tf.keras.Model class allows us to train our neural network.
     
+    # Train the neural network
+    model.fit(X, y, epochs = 100, verbose = 1)
     
 # ============================================================================ #
 # Car Price Prediction - Code End                                              |
