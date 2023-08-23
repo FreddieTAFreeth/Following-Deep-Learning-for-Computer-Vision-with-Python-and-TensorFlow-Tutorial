@@ -14,8 +14,8 @@ if __name__ == "__main__":
     
     # The Task:
     # --------------------------
-    # We want to predict the price of second-hand cars given several input features.
-    # Owners of these cars will specify:
+    # We want to predict the price of second-hand cars given several input
+    # features. Owners of these cars will specify:
     # - "years": how old the car is,
     # - "km": how many kilometres the car has driven,
     # - "rating": the rating of the vehicle,
@@ -53,7 +53,8 @@ if __name__ == "__main__":
     # --------------------------
     # Data Source: Mayank Patel, Kaggle.
     # https://www.kaggle.com/datasets/mayankpatel14/second-hand-used-cars-data-set-linear-regression
-    # Note: I have removed the "on road old" and the "on road now" features of the dataset.
+    # Note: I have removed the "on road old" and the "on road now" features of
+    # the dataset.
     #
     # Ignoring vehicle ID ("v.id"), our input X is a tensor of shape (N = 1000, 8)
     # and our output tensor Y is a tensor of shape (N = 1000, 1), since the data
@@ -69,7 +70,7 @@ if __name__ == "__main__":
     # |  ...  ...       ...  ...     ...          ...    ...       ...  ...    |    ...        | |
     # | 1000    5     67295    4       2            8    199        99   96    | 414938.5      | |
     # ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾ ‾
-    # We can now begin with reading in the model data, and converting it to a tensor.
+    # We can now read in the model data, and converting it to a tensor.
 
     # Read in the data
     car_data = pd.read_csv("Car_Prices.csv", sep = ",")
@@ -95,6 +96,7 @@ if __name__ == "__main__":
     # tf.expand_dims method to turn it into a column tensor
     X = car_data_tensor[:, 0:8]
     y = tf.expand_dims(input = car_data_tensor[:, 9], axis = 1)
+    N = len(X) # Number of data points (essentially the number of cars)
     
 
     # Essentially, for each feature from X, say x (lower case x), we can compare
@@ -324,6 +326,38 @@ if __name__ == "__main__":
     # values for the model in test mode.
     
     model.evaluate(X, y)
+
+
+    # Validation and Testing:
+    # --------------------------
+    # We want to be able to test whether our model actually work. At the moment,
+    # our model is trained on a narrow dataset, and may be fitted to values in
+    # our data. Now, what if we want to supply in values the model hasn't seen
+    # before? How will it perform? This is why we we validate and test the model.
+    # What we want is for new, unseen data to produce reasonable outputs. What
+    # we can do is break up our dataset into two halves: once for training, and
+    # then one for testing. Out of our 1000 cars, we can supply 800 for training
+    # and then the last 200 for validation and testing. When we shuffled the
+    # dataset at the start of the script, this helps us make sure there are no
+    # underlying biases in how the dataset is structured or in the order of
+    # how it was collected or stored.
+    #
+    # Now, supposing we have some insanely massive dataset. We don't want to
+    # wait until it has finished training before we can validate it. So, while
+    # it is training, we want to see how it performs on data it hasn't seen.
+    # This data is called the "Validation Set". The data we used to train the
+    # model is the "Training Set", and set of data used to test the model after
+    # it has been trained is the "Testing Set". We now split up our dataset into
+    # the training set, the testing set, and the validation set.
+
+    TRAIN_PROPORTION = 0.8
+    TESTING_PROPORTION = 0.1
+    VALIDATION_PROPORTION = 0.1
+    assert TRAIN_PROPORTION + TESTING_PROPORTION + VALIDATION_PROPORTION == 1
+
+    X_train = X[0:round(N * TRAIN_PROPORTION)]
+    X_test  = X[round(N * TRAIN_PROPORTION):round(N * (TRAIN_PROPORTION + TESTING_PROPORTION))]
+    X_val   = X[round(N * (TRAIN_PROPORTION + TESTING_PROPORTION)):round(N * (TRAIN_PROPORTION + TESTING_PROPORTION + VALIDATION_PROPORTION))]
     
 # ============================================================================ #
 # Car Price Prediction - Code End                                              |
