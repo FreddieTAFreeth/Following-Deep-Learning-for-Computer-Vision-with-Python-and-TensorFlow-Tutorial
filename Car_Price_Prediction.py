@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 if __name__ == "__main__":
     
     # The Task:
-    # --------------------------
+    # ---------------------------
     # We want to predict the price of second-hand cars given several input
     # features. Owners of these cars will specify:
     # - "years": how old the car is,
@@ -28,7 +28,7 @@ if __name__ == "__main__":
     #
     #
     # The Model:
-    # --------------------------
+    # ---------------------------
     # Consider the data of car engine horsepower (hp) and price ($) of the car.
     # Suppose X is the model input, and Y is the model output. We want to then
     # predict two values given an input of car engine horsepower.
@@ -174,7 +174,7 @@ if __name__ == "__main__":
 
     
     # Model Error Analysis:
-    # --------------------------
+    # ---------------------------
     # We want to see how well our model, the best fit line, compares with the
     # actual data. Remember that for each input point in X, the model produces
     # an estimate y_p which is the predicted value. Putting in existing values
@@ -242,7 +242,7 @@ if __name__ == "__main__":
 
 
     # Training and Optimisation:
-    # --------------------------
+    # ---------------------------
     # In our graph above, we want to find the values of the weights and bias m
     # and c such that the regression line best fits the data, determined by the
     # lowest mean absolute/squared error (or Huber method or some other way).
@@ -293,7 +293,11 @@ if __name__ == "__main__":
     # tf.keras.Model class allows us to train our neural network.
     
     # Train the neural network with batch_size batches and 100 epochs
-    model_fitting = model.fit(X, y, batch_size = batch_size, epochs = 100, verbose = 1)
+    model_fitting = model.fit(
+        x = X, y = y, batch_size = batch_size, epochs = 100, verbose = 0
+    )
+    # Setting verbose = 1 will give a printout of the progress of the different
+    # epochs, plus information about losses too (more on this shortly).
 
     # We can plot the values of the losses generated when fitting the model.
     # Changing the learning_rate parameter will change how fast the model will
@@ -302,11 +306,11 @@ if __name__ == "__main__":
     plt.title("Model Losses")
     plt.ylabel("Model Loss")
     plt.xlabel("Epoch")
-    plt.legend(["Train"])
+    plt.legend(["Loss"])
     plt.show()
 
     # Performance Measurement:
-    # --------------------------
+    # ---------------------------
     # We want to quantify how well the model performs. A common way used to
     # evaluate model performance is the "Root Mean Square Error" (RMSE). Using
     # a performance measurement, we can compare two model's performance on the
@@ -316,9 +320,9 @@ if __name__ == "__main__":
 
     plt.plot(model_fitting.history["root_mean_squared_error"])
     plt.title("Model Performance")
-    plt.ylabel("Root Mean Square Error")
+    plt.ylabel("Root Mean Squared Error")
     plt.xlabel("Epoch")
-    plt.legend(["Train"])
+    plt.legend(["RMSE"])
     plt.show()
 
     # Another method for evaluating a TensorFlow model is using the evaluate()
@@ -329,7 +333,7 @@ if __name__ == "__main__":
 
 
     # Validation and Testing:
-    # --------------------------
+    # ---------------------------
     # We want to be able to test whether our model actually work. At the moment,
     # our model is trained on a narrow dataset, and may be fitted to values in
     # our data. Now, what if we want to supply in values the model hasn't seen
@@ -364,9 +368,155 @@ if __name__ == "__main__":
 
     # Define the training, test, and validation sets
     X_train = X[train_IDs[0]: train_IDs[-1]]
+    y_train = y[train_IDs[0]: train_IDs[-1]]
     X_test  = X[test_IDs[0]:test_IDs[-1]]
+    y_test  = y[test_IDs[0]:test_IDs[-1]]
     X_val   = X[validation_IDs[0]:validation_IDs[-1]]
+    y_val   = y[validation_IDs[0]:validation_IDs[-1]]
+
+    # Now, we go back and reoeat this process, but using our different data sets:
+    batch_size = 5
+    normaliser = tf.keras.layers.Normalization()
+    normaliser.adapt(X_train)
     
+    # We may also modify the neural network model. Doing the stuff below with the
+    # first version of the model results in the model being very poor. Skip ahead
+    # to the end with the old version to try it yourself! Some corrective measures
+    # are to make the model more complex. We can create some more dense "hidden"
+    # layers at the cost of extra computing performance. They work in a similar
+    # way in that all neurons from the previous layers are all connected to the
+    # next layer, excpet there are now far more connections between layers. It
+    # looks like the following (however connections are removed since drawing in
+    # ASCII is difficult ;) just imagine each neuron from neuron is connected to
+    # the neurons in the next).
+    #
+    #  x_1 x_2 x_3 x_4 x_5 x_6 x_7 x_8
+    #   ○   ○   ○   ○   ○   ○   ○   ○   Input Layer
+    #
+    #                 |
+    #                 V
+    #
+    #   ○   ○   ○   ○   ○   ○   ○   ○   Normalisation Layer
+    #
+    #                 |
+    #                 V
+    #
+    #             ○   ○   ○             Dense(3) Layer
+    #
+    #                 |
+    #                 V
+    #
+    #           ○   ○   ○   ○           Dense(4) Layer
+    #
+    #                 |
+    #                 V
+    #
+    #             ○   ○   ○             Dense(3) Layer
+    #
+    #                 |
+    #                 V
+    #
+    #                 ○                 Dense(1) Layer
+    #
+    # We can also change how neurons activate in the layers as this will also
+    # influence the learning process. Early functions were the sigmoid activation
+    # functions but more state of the art methods involve ones such as the ReLU
+    # (Recified Linear Unit) and Tanh functions. For a given connection between
+    # two neurons, we had this y = m x + c type equation. Well, we actually pass
+    # this through one of the "squishification" functions like the sigmoid or the
+    # ReLU functions, to map the value of y = m x + c to a number between 0 and 1.
+    # Values of 0 are inactive neurons and values close to 1 are active neurons.
+    # The properties of these activations functions (meaning broadly the
+    # mathematical properties of them) determine, in collaboration with the
+    # weights and biases, determine the tendancy for a neuron to activate.
+    # We specify the activation functions within the layers themselves:
+    
+    model = tf.keras.Sequential([
+        tf.keras.layers.InputLayer(input_shape = (8, )),
+        normaliser,
+        tf.keras.layers.Dense(128, activation = "relu"),
+        tf.keras.layers.Dense(256, activation = "relu"),
+        tf.keras.layers.Dense(128, activation = "relu"),
+        tf.keras.layers.Dense(1)
+    ])
+
+    # And don't forget to re-compile this new model!
+    model.compile(
+        optimizer = tf.keras.optimizers.Adam(learning_rate = 0.1),
+        loss = tf.keras.losses.Huber(),
+        metrics = tf.keras.metrics.RootMeanSquaredError()
+    )
+    
+    # We can now re-fit the model, but instead we can use the validation data we
+    # have defined and fit the model to the training data. Instead of manually
+    # breaking apart the dataframe like we have done, you can use the "shuffle"
+    # (Boolean) and "validation_split" (a number between 0 and 1) arguments and
+    # this will do the data shuffling and partitioning for you which is helpful.
+    
+    model_fitting = model.fit(
+        x = X_train, y = y_train, batch_size = batch_size, epochs = 100,
+        validation_data = (X_val, y_val), verbose = 0
+    )
+    # Running the above with verbose = 1 will now also print the "val_loss", the
+    # validation loss, and "val_root_mean_squared_error" which is the RMSE against
+    # the validation data across the different epochs. We can now plot these.
+
+    # Plot for losses
+    plt.plot(model_fitting.history["loss"])
+    plt.plot(model_fitting.history["val_loss"])
+    plt.title("Model Losses")
+    plt.ylabel("Loss")
+    plt.xlabel("Epoch")
+    plt.legend(["Loss", "Validation Loss"])
+    plt.show()
+
+    # Plot for the error
+    plt.plot(model_fitting.history["root_mean_squared_error"])
+    plt.plot(model_fitting.history["val_root_mean_squared_error"])
+    plt.title("Model Performance")
+    plt.ylabel("Root Mean Squared Error")
+    plt.xlabel("Epoch")
+    plt.legend(["RMSE", "Validation RMSE"])
+    plt.show()
+
+    # You'll notice that the losses in the training data are lower than in the
+    # validation set. This is normal since the values in the training set the
+    # model has already seen! However, if the model performs really well in the
+    # training data but really poorly in the validation data, then it is said
+    # that the model is "over-fitting".
+
+    # And we can also evaluate our model on the training and test sets, too:
+    model.evaluate(X_train, y_train)
+    model.evaluate(X_test, y_test)
+
+    # Let's test the model for every value from the testing set:
+    model.predict(X_test)
+
+    # You can also test a singular datapoint too (after expanding the dimension):
+    car_price_prediction = model.predict(tf.expand_dims(X_test[0], axis = 0))
+
+    # This tells us that for the first car in the testing set, it predicts the
+    # price given by the output of model.predict(). How does it compare? Well,
+    # having the basic network of the input layer, the normalisation layer, and
+    # then the Dense(1) layer fits extremely poorly. The prices are way lower
+    # than what is expected - a situation known as "under-fitting".
+    car_price_actual = y_test[0]
+
+    # Final result:
+    price_difference = car_price_prediction - car_price_actual
+    print(f"Model Prediction: ${car_price_prediction}")
+    print(f"Actual Price: ${car_price_actual}")
+    print(f"Car Price Difference: ${price_difference}")
+
+    # If not done so already, go back and use the very first version of the
+    # model with just the input, normalisation, and Dense(1) layer. Notice how
+    # badly this performs!
+
+
+    # Faster Ways To Import Data:
+    # ---------------------------
+    # 
+
 # ============================================================================ #
 # Car Price Prediction - Code End                                              |
 # ============================================================================ #
