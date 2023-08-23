@@ -350,14 +350,22 @@ if __name__ == "__main__":
     # it has been trained is the "Testing Set". We now split up our dataset into
     # the training set, the testing set, and the validation set.
 
+    # Define the proportion of each dataset you want
     TRAIN_PROPORTION = 0.8
     TESTING_PROPORTION = 0.1
     VALIDATION_PROPORTION = 0.1
     assert TRAIN_PROPORTION + TESTING_PROPORTION + VALIDATION_PROPORTION == 1
 
-    X_train = X[0:round(N * TRAIN_PROPORTION)]
-    X_test  = X[round(N * TRAIN_PROPORTION):round(N * (TRAIN_PROPORTION + TESTING_PROPORTION))]
-    X_val   = X[round(N * (TRAIN_PROPORTION + TESTING_PROPORTION)):round(N * (TRAIN_PROPORTION + TESTING_PROPORTION + VALIDATION_PROPORTION))]
+    # Create the IDs of each set
+    train_IDs      = np.arange(0, round(N * TRAIN_PROPORTION))
+    test_IDs       = np.arange(len(train_IDs), len(train_IDs) + round(N * TESTING_PROPORTION))
+    validation_IDs = np.arange(len(test_IDs),  len(test_IDs)  + round(N * VALIDATION_PROPORTION))
+    assert len(train_IDs) + len(test_IDs) + len(validation_IDs) == N
+
+    # Define the training, test, and validation sets
+    X_train = X[train_IDs[0]: train_IDs[-1]]
+    X_test  = X[test_IDs[0]:test_IDs[-1]]
+    X_val   = X[validation_IDs[0]:validation_IDs[-1]]
     
 # ============================================================================ #
 # Car Price Prediction - Code End                                              |
