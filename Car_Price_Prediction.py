@@ -318,6 +318,12 @@ if __name__ == "__main__":
     plt.xlabel("Epoch")
     plt.legend(["Train"])
     plt.show()
+
+    # Another method for evaluating a TensorFlow model is using the evaluate()
+    # method from the tf.keras.Model class. It returns the loss value and metrics
+    # values for the model in test mode.
+    
+    model.evaluate(X, y)
     
 # ============================================================================ #
 # Car Price Prediction - Code End                                              |
