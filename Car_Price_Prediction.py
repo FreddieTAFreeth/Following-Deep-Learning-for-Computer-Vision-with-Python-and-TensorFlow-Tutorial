@@ -165,7 +165,7 @@ if __name__ == "__main__":
     model = tf.keras.Sequential([
         tf.keras.layers.InputLayer(input_shape = (8, )),
         normaliser, # Normalisation layer - has output shape (None, 8)
-        tf.keras.layers.Dense(1), # Single dense neuron layer - has output shape (None, 1)
+        tf.keras.layers.Dense(1) # Single dense neuron layer - has output shape (None, 1)
     ])
     # model.summary() # View the model summary
     # tf.keras.utils.plot_model(model, show_shapes = True) # View model layer plot
@@ -232,9 +232,10 @@ if __name__ == "__main__":
     model.compile(
         # optimizer = tf.keras.optimizers.SGD(), # Stochastic Gradient Descent
         optimizer = tf.keras.optimizers.Adam(learning_rate = 1),
-        # loss = tf.keras.losses.MeanAbsoluteError()
-        # loss = tf.keras.losses.MeanSquaredError()
-        loss = tf.keras.losses.Huber()
+        # loss = tf.keras.losses.MeanAbsoluteError(),
+        # loss = tf.keras.losses.MeanSquaredError(),
+        loss = tf.keras.losses.Huber(),
+        metrics = tf.keras.metrics.RootMeanSquaredError() # More on this in Performance Measurement!
     )
 
 
@@ -307,7 +308,16 @@ if __name__ == "__main__":
     # We want to quantify how well the model performs. A common way used to
     # evaluate model performance is the "Root Mean Square Error" (RMSE). Using
     # a performance measurement, we can compare two model's performance on the
-    # same dataset. 
+    # same dataset. We can configure our metric when we compile our model with
+    # the "metric" parameter. This has been done above. When we train our model,
+    # the losses and the metric will both be printed. We can now plot the RMSE.
+
+    plt.plot(model_fitting.history["root_mean_squared_error"])
+    plt.title("Model Performance")
+    plt.ylabel("Root Mean Square Error")
+    plt.xlabel("Epoch")
+    plt.legend(["Train"])
+    plt.show()
     
 # ============================================================================ #
 # Car Price Prediction - Code End                                              |
