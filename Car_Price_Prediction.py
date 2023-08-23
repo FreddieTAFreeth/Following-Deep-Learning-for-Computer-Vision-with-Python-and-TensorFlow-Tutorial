@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ============================================================================ #
-# Car Price Prediction - Frederick T. A. Freeth                     22/08/2023 |
+# Car Price Prediction - Frederick T. A. Freeth                     23/08/2023 |
 # ============================================================================ #
 # Following https://www.youtube.com/watch?v=IA3WxTTPXqQ.
 
@@ -278,7 +278,7 @@ if __name__ == "__main__":
     # equation w := w - η ∇[C(W)] for η the "learning rate". In 1 dimension,
     # this is analagous to finding the gradient of a curve, and then stepping
     # towards the downhill direction as eluded to above. This process will be
-    # repeated until we achieve sufficient 
+    # repeated until we achieve sufficient minimisations in losses.
     #
     # Backpropagation is the way we can calculate this gradient efficently,
     # since in a a high dimensional space, ∇[C(W)] is very difficult to find.
