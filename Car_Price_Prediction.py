@@ -9,8 +9,6 @@ import tensorflow as tf
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from tensorflow.keras.layers import InputLayer, Normalization, Dense
-from tensorflow.keras.losses import MeanSquaredError, MeanAbsoluteError, Huber
 
 if __name__ == "__main__":
     
@@ -160,14 +158,14 @@ if __name__ == "__main__":
     # overfitting.
 
     batch_size = 5
-    normaliser = Normalization() # Init normaliser
+    normaliser = tf.keras.layers.Normalization() # Init normaliser
     normaliser.adapt(X) # Find the mean and standard deviation of each column
 
     # Build the neural network model
     model = tf.keras.Sequential([
-        InputLayer(input_shape = (8, )),
+        tf.keras.layers.InputLayer(input_shape = (8, )),
         normaliser, # Normalisation layer - has output shape (None, 8)
-        Dense(1),   # Single dense neuron layer - has output shape (None, 1)
+        tf.keras.layers.Dense(1), # Single dense neuron layer - has output shape (None, 1)
     ])
     # model.summary() # View the model summary
     # tf.keras.utils.plot_model(model, show_shapes = True) # View model layer plot
@@ -234,9 +232,9 @@ if __name__ == "__main__":
     model.compile(
         # optimizer = tf.keras.optimizers.SGD(), # Stochastic Gradient Descent
         optimizer = tf.keras.optimizers.Adam(learning_rate = 1),
-        # loss = MeanAbsoluteError()
-        # loss = MeanSquaredError()
-        loss = Huber()
+        # loss = tf.keras.losses.MeanAbsoluteError()
+        # loss = tf.keras.losses.MeanSquaredError()
+        loss = tf.keras.losses.Huber()
     )
 
 
@@ -306,7 +304,10 @@ if __name__ == "__main__":
 
     # Performance Measurement:
     # --------------------------
-    # We want to quantify how well the model performs. So, 
+    # We want to quantify how well the model performs. A common way used to
+    # evaluate model performance is the "Root Mean Square Error" (RMSE). Using
+    # a performance measurement, we can compare two model's performance on the
+    # same dataset. 
     
 # ============================================================================ #
 # Car Price Prediction - Code End                                              |
