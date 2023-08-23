@@ -227,9 +227,13 @@ if __name__ == "__main__":
 
     # Compile the model with a specific loss function. In tf.keras.optimizers,
     # there are different optimisation algorithms to choose from. We will
-    # discuss optimisers in the nxt section.
+    # discuss optimisers in the nxt section. The most common optimiser is the
+    # Adam optimiser, which is a stochastic gradient descent method based on
+    # adaptive estimation of first and second-order moments. It is computationally
+    # efficient and has little memory requirement.
     model.compile(
-        optimizer = tf.keras.optimizers.SGD(learning_rate = 0.01),
+        # optimizer = tf.keras.optimizers.SGD(), # Stochastic Gradient Descent
+        optimizer = tf.keras.optimizers.Adam(learning_rate = 1),
         # loss = MeanAbsoluteError()
         # loss = MeanSquaredError()
         loss = Huber()
@@ -288,7 +292,21 @@ if __name__ == "__main__":
     # tf.keras.Model class allows us to train our neural network.
     
     # Train the neural network with batch_size batches and 100 epochs
-    model.fit(X, y, batch_size = batch_size, epochs = 100, verbose = 1)
+    model_fitting = model.fit(X, y, batch_size = batch_size, epochs = 100, verbose = 1)
+
+    # We can plot the values of the losses generated when fitting the model.
+    # Changing the learning_rate parameter will change how fast the model will
+    # converge.
+    plt.plot(model_fitting.history["loss"])
+    plt.title("Model Losses")
+    plt.ylabel("Model Loss")
+    plt.xlabel("Epoch")
+    plt.legend(["Train"])
+    plt.show()
+
+    # Performance Measurement:
+    # --------------------------
+    # We want to quantify how well the model performs. So, 
     
 # ============================================================================ #
 # Car Price Prediction - Code End                                              |
