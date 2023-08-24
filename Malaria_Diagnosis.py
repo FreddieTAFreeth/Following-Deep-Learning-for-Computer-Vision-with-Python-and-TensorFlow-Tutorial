@@ -23,6 +23,17 @@ if __name__ == "__main__":
     # deaths in the Region. Source (accessed 24/08/2023): 
     # https://www.who.int/news-room/fact-sheets/detail/malaria
 
+    # In this file, we will build a machine learning model based on convolutional
+    # neural networks (CNNs) that aim to diagnose malaria. The data we will use
+    # are microscopy photos of cells. Our model takes in as input a photo of a
+    # cell, and as output gives a binary classification of whether the person
+    # is infected with malaria or not:
+    #
+    #     Inputs                         Outputs
+    #     ‾‾‾‾‾‾                         ‾‾‾‾‾‾‾
+    #   [ Cell   ]     [       ]     [ Host Status: ]
+    #   [ Photo- ] --> [ Model ] --> [ infected or  ]
+    #   [ graph  ]     [       ]     [ not infected ]
     
     
     
