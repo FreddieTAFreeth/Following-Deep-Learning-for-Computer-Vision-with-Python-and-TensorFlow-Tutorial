@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ============================================================================ #
-# Car Price Prediction - Frederick T. A. Freeth                     23/08/2023 |
+# Car Price Prediction - Frederick T. A. Freeth                     24/08/2023 |
 # ============================================================================ #
 # Following https://www.youtube.com/watch?v=IA3WxTTPXqQ.
 
@@ -25,6 +25,12 @@ if __name__ == "__main__":
     # - "hp" the horse-power of the car's engine,
     # - "torque": the engine torque,
     # - "current price": the current price of the car.
+    #
+    # NOTE: Only the final version of the model at the very end has been left
+    # uncommented, and uses all the combined knowledge in this script. Now,
+    # however, it is reccomended to read this sequentially and copy and paste
+    # the bits of code into another file, and modify in-place as you read this
+    # file.
     #
     #
     # The Model:
@@ -159,16 +165,16 @@ if __name__ == "__main__":
     # will make a model converge quicker, however large batch sizes can cause
     # overfitting.
 
-    batch_size = 5
-    normaliser = tf.keras.layers.Normalization() # Init normaliser
-    normaliser.adapt(X) # Find the mean and standard deviation of each column
+    # batch_size = 5
+    # normaliser = tf.keras.layers.Normalization() # Init normaliser
+    # normaliser.adapt(X) # Find the mean and standard deviation of each column
 
     # Build the neural network model
-    model = tf.keras.Sequential([
-        tf.keras.layers.InputLayer(input_shape = (8, )),
-        normaliser, # Normalisation layer - has output shape (None, 8)
-        tf.keras.layers.Dense(1) # Single dense neuron layer - has output shape (None, 1)
-    ])
+    # model = tf.keras.Sequential([
+    #     tf.keras.layers.InputLayer(input_shape = (8, )),
+    #     normaliser, # Normalisation layer - has output shape (None, 8)
+    #     tf.keras.layers.Dense(1) # Single dense neuron layer - has output shape (None, 1)
+    # ])
     # model.summary() # View the model summary
     # tf.keras.utils.plot_model(model, show_shapes = True) # View model layer plot
 
@@ -231,14 +237,14 @@ if __name__ == "__main__":
     # Adam optimiser, which is a stochastic gradient descent method based on
     # adaptive estimation of first and second-order moments. It is computationally
     # efficient and has little memory requirement.
-    model.compile(
+    # model.compile(
         # optimizer = tf.keras.optimizers.SGD(), # Stochastic Gradient Descent
-        optimizer = tf.keras.optimizers.Adam(learning_rate = 1),
+    #     optimizer = tf.keras.optimizers.Adam(learning_rate = 1),
         # loss = tf.keras.losses.MeanAbsoluteError(),
         # loss = tf.keras.losses.MeanSquaredError(),
-        loss = tf.keras.losses.Huber(),
-        metrics = tf.keras.metrics.RootMeanSquaredError() # More on this in Performance Measurement!
-    )
+    #     loss = tf.keras.losses.Huber(),
+    #     metrics = tf.keras.metrics.RootMeanSquaredError() # More on this in Performance Measurement!
+    # )
 
 
     # Training and Optimisation:
@@ -293,21 +299,21 @@ if __name__ == "__main__":
     # tf.keras.Model class allows us to train our neural network.
     
     # Train the neural network with batch_size batches and 100 epochs
-    model_fitting = model.fit(
-        x = X, y = y, batch_size = batch_size, epochs = 100, verbose = 0
-    )
+    # model_fitting = model.fit(
+    #     x = X, y = y, batch_size = batch_size, epochs = 100, verbose = 0
+    # )
     # Setting verbose = 1 will give a printout of the progress of the different
     # epochs, plus information about losses too (more on this shortly).
 
     # We can plot the values of the losses generated when fitting the model.
     # Changing the learning_rate parameter will change how fast the model will
     # converge.
-    plt.plot(model_fitting.history["loss"])
-    plt.title("Model Losses")
-    plt.ylabel("Model Loss")
-    plt.xlabel("Epoch")
-    plt.legend(["Loss"])
-    plt.show()
+    # plt.plot(model_fitting.history["loss"])
+    # plt.title("Model Losses")
+    # plt.ylabel("Model Loss")
+    # plt.xlabel("Epoch")
+    # plt.legend(["Loss"])
+    # plt.show()
 
     # Performance Measurement:
     # ---------------------------
@@ -318,18 +324,18 @@ if __name__ == "__main__":
     # the "metric" parameter. This has been done above. When we train our model,
     # the losses and the metric will both be printed. We can now plot the RMSE.
 
-    plt.plot(model_fitting.history["root_mean_squared_error"])
-    plt.title("Model Performance")
-    plt.ylabel("Root Mean Squared Error")
-    plt.xlabel("Epoch")
-    plt.legend(["RMSE"])
-    plt.show()
+    # plt.plot(model_fitting.history["root_mean_squared_error"])
+    # plt.title("Model Performance")
+    # plt.ylabel("Root Mean Squared Error")
+    # plt.xlabel("Epoch")
+    # plt.legend(["RMSE"])
+    # plt.show()
 
     # Another method for evaluating a TensorFlow model is using the evaluate()
     # method from the tf.keras.Model class. It returns the loss value and metrics
     # values for the model in test mode.
     
-    model.evaluate(X, y)
+    # model.evaluate(X, y)
 
 
     # Validation and Testing:
@@ -376,8 +382,8 @@ if __name__ == "__main__":
 
     # Now, we go back and reoeat this process, but using our different data sets:
     batch_size = 5
-    normaliser = tf.keras.layers.Normalization()
-    normaliser.adapt(X_train)
+    # normaliser = tf.keras.layers.Normalization()
+    # normaliser.adapt(X_train)
     
     # We may also modify the neural network model. Doing the stuff below with the
     # first version of the model results in the model being very poor. Skip ahead
@@ -431,6 +437,143 @@ if __name__ == "__main__":
     # weights and biases, determine the tendancy for a neuron to activate.
     # We specify the activation functions within the layers themselves:
     
+    # model = tf.keras.Sequential([
+    #     tf.keras.layers.InputLayer(input_shape = (8, )),
+    #     normaliser,
+    #     tf.keras.layers.Dense(128, activation = "relu"),
+    #     tf.keras.layers.Dense(256, activation = "relu"),
+    #     tf.keras.layers.Dense(128, activation = "relu"),
+    #     tf.keras.layers.Dense(1)
+    # ])
+
+    # And don't forget to re-compile this new model!
+    # model.compile(
+    #     optimizer = tf.keras.optimizers.Adam(learning_rate = 0.1),
+    #     loss = tf.keras.losses.Huber(),
+    #     metrics = tf.keras.metrics.RootMeanSquaredError()
+    # )
+    
+    # We can now re-fit the model, but instead we can use the validation data we
+    # have defined and fit the model to the training data. Instead of manually
+    # breaking apart the dataframe like we have done, you can use the "shuffle"
+    # (Boolean) and "validation_split" (a number between 0 and 1) arguments and
+    # this will do the data shuffling and partitioning for you which is helpful.
+    # To also help with the model performance, we can increase the number of
+    # epochs too. 
+    
+    # model_fitting = model.fit(
+    #     x = X_train, y = y_train, batch_size = batch_size, epochs = 256,
+    #     validation_data = (X_val, y_val), verbose = 0
+    # )
+    # Running the above with verbose = 1 will now also print the "val_loss", the
+    # validation loss, and "val_root_mean_squared_error" which is the RMSE against
+    # the validation data across the different epochs. We can now plot these.
+
+    # Plot for losses
+    # plt.plot(model_fitting.history["loss"])
+    # plt.plot(model_fitting.history["val_loss"])
+    # plt.title("Model Losses")
+    # plt.ylabel("Loss")
+    # plt.xlabel("Epoch")
+    # plt.legend(["Loss", "Validation Loss"])
+    # plt.show()
+
+    # Plot for the error
+    # plt.plot(model_fitting.history["root_mean_squared_error"])
+    # plt.plot(model_fitting.history["val_root_mean_squared_error"])
+    # plt.title("Model Performance")
+    # plt.ylabel("Root Mean Squared Error")
+    # plt.xlabel("Epoch")
+    # plt.legend(["RMSE", "Validation RMSE"])
+    # plt.show()
+
+    # You'll notice that the losses in the training data are lower than in the
+    # validation set. This is normal since the values in the training set the
+    # model has already seen! However, if the model performs really well in the
+    # training data but really poorly in the validation data, then it is said
+    # that the model is "over-fitting".
+
+    # And we can also evaluate our model on the training and test sets, too:
+    # model.evaluate(X_train, y_train)
+    # model.evaluate(X_test, y_test)
+
+    # Let's test the model for every value from the testing set:
+    # model.predict(X_test)
+
+    # You can also test a singular datapoint too (after expanding the dimension):
+    # car_price_prediction = model.predict(tf.expand_dims(X_test[0], axis = 0))
+
+    # This tells us that for the first car in the testing set, it predicts the
+    # price given by the output of model.predict(). How does it compare? Well,
+    # having the basic network of the input layer, the normalisation layer, and
+    # then the Dense(1) layer fits extremely poorly. The prices are way lower
+    # than what is expected - a situation known as "under-fitting".
+    # car_price_actual = y_test[0]
+
+    # Final result:
+    # price_difference = car_price_prediction - car_price_actual
+    # print(f"Model Prediction: ${car_price_prediction}")
+    # print(f"Actual Price: ${car_price_actual}")
+    # print(f"Car Price Difference: ${price_difference}")
+
+    # If not done so already, go back and use the very first version of the
+    # model with just the input, normalisation, and Dense(1) layer. Notice how
+    # badly this performs!
+
+
+    # Faster Ways To Import Data:
+    # ---------------------------
+    # Now, in machine learning, it is common for datasets to be massive. How can
+    # we import massive datasets faster? The tf.data.Dataset class has methods
+    # that can help us. Using the from_tensor_slices() method, we can import our
+    # data much faster. This speed increase is really apparent on really massive
+    # datasets.
+    training_data   = tf.data.Dataset.from_tensor_slices((X_train, y_train))
+    validation_data = tf.data.Dataset.from_tensor_slices((X_val, y_val))
+    test_data       = tf.data.Dataset.from_tensor_slices((X_test, y_test))
+
+    # We can also shuffle the data as well using the shuffle() method. The method
+    # parameter "buffer_size" is the number of samples which are randomised. The
+    # batch() method creates the batches given. Then, prefetch() pre-loads data,
+    # at the cost of more memory usage, so that once a current batch has finished
+    # processing, the next batch has already been loaded and prepared whilst the
+    # model is training the current batch. This often improves latency and
+    # data throughput.
+    #
+    # |---------------------------------------------------------> Time
+    #           Loading           Loading           Loading
+    # |||||||||---------|||||||||---------|||||||||---------||||||||| --> Slow!
+    # Training          Training          Training          Training
+    #
+    #  Loading   Loading   Loading   Loading
+    # --------- --------- --------- ---------
+    # |||||||||-|||||||||-|||||||||-||||||||| --> Faster since data for the next
+    # Training  Training  Training  Training      training block was pre-loaded
+    #
+    # The diagram above illustrates how the model will train the batches, and
+    # then pre-loads the data for the next batch.
+    
+    training_data = training_data.shuffle(
+        buffer_size = 8, reshuffle_each_iteration = True
+    ).batch(32).prefetch(tf.data.AUTOTUNE)
+
+    validation_data = validation_data.shuffle(
+        buffer_size = 8, reshuffle_each_iteration = True
+    ).batch(32).prefetch(tf.data.AUTOTUNE)
+
+    test_data = test_data.shuffle(
+        buffer_size = 8, reshuffle_each_iteration = True
+    ).batch(32).prefetch(tf.data.AUTOTUNE)
+
+    # You can print the data in the batches as well:
+    # for x, y in training_data: print(x, y)
+
+    # We don't need to make any changes to the model, but we include it below:
+
+    # Re-initialise the normalisation layer
+    normaliser = tf.keras.layers.Normalization()
+    normaliser.adapt(X_train)
+    
     model = tf.keras.Sequential([
         tf.keras.layers.InputLayer(input_shape = (8, )),
         normaliser,
@@ -440,26 +583,18 @@ if __name__ == "__main__":
         tf.keras.layers.Dense(1)
     ])
 
-    # And don't forget to re-compile this new model!
+    # Model compilation
     model.compile(
         optimizer = tf.keras.optimizers.Adam(learning_rate = 0.1),
         loss = tf.keras.losses.Huber(),
         metrics = tf.keras.metrics.RootMeanSquaredError()
     )
     
-    # We can now re-fit the model, but instead we can use the validation data we
-    # have defined and fit the model to the training data. Instead of manually
-    # breaking apart the dataframe like we have done, you can use the "shuffle"
-    # (Boolean) and "validation_split" (a number between 0 and 1) arguments and
-    # this will do the data shuffling and partitioning for you which is helpful.
-    
+    # Fitting the model
     model_fitting = model.fit(
-        x = X_train, y = y_train, batch_size = batch_size, epochs = 100,
-        validation_data = (X_val, y_val), verbose = 0
+        training_data, batch_size = batch_size, epochs = 256,
+        validation_data = (X_val, y_val), verbose = 1
     )
-    # Running the above with verbose = 1 will now also print the "val_loss", the
-    # validation loss, and "val_root_mean_squared_error" which is the RMSE against
-    # the validation data across the different epochs. We can now plot these.
 
     # Plot for losses
     plt.plot(model_fitting.history["loss"])
@@ -479,43 +614,20 @@ if __name__ == "__main__":
     plt.legend(["RMSE", "Validation RMSE"])
     plt.show()
 
-    # You'll notice that the losses in the training data are lower than in the
-    # validation set. This is normal since the values in the training set the
-    # model has already seen! However, if the model performs really well in the
-    # training data but really poorly in the validation data, then it is said
-    # that the model is "over-fitting".
-
-    # And we can also evaluate our model on the training and test sets, too:
+    # Model evaluation
     model.evaluate(X_train, y_train)
     model.evaluate(X_test, y_test)
+    car_price_predictions = list(model.predict(X_test)[:, 0])
+    car_price_actual = list(y_test[:, 0])
 
-    # Let's test the model for every value from the testing set:
-    model.predict(X_test)
-
-    # You can also test a singular datapoint too (after expanding the dimension):
-    car_price_prediction = model.predict(tf.expand_dims(X_test[0], axis = 0))
-
-    # This tells us that for the first car in the testing set, it predicts the
-    # price given by the output of model.predict(). How does it compare? Well,
-    # having the basic network of the input layer, the normalisation layer, and
-    # then the Dense(1) layer fits extremely poorly. The prices are way lower
-    # than what is expected - a situation known as "under-fitting".
-    car_price_actual = y_test[0]
-
-    # Final result:
-    price_difference = car_price_prediction - car_price_actual
-    print(f"Model Prediction: ${car_price_prediction}")
-    print(f"Actual Price: ${car_price_actual}")
-    print(f"Car Price Difference: ${price_difference}")
-
-    # If not done so already, go back and use the very first version of the
-    # model with just the input, normalisation, and Dense(1) layer. Notice how
-    # badly this performs!
-
-
-    # Faster Ways To Import Data:
-    # ---------------------------
-    # 
+    # Plotting the real and predicted car prices:
+    plt.plot(car_price_predictions)
+    plt.plot(car_price_actual)
+    plt.title("Model Prediction")
+    plt.ylabel("Car Price, $")
+    plt.xlabel("Car")
+    plt.legend(["Actual Price", "Predicted Price"])
+    plt.show()
 
 # ============================================================================ #
 # Car Price Prediction - Code End                                              |
