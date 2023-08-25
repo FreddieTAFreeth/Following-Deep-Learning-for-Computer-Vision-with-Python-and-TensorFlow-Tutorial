@@ -6,6 +6,7 @@
 
 import csv
 import tensorflow as tf
+import tensorflow_datasets as tfds
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -42,8 +43,37 @@ if __name__ == "__main__":
     #   [ Cell   ]     [       ]     [ Host Status: ]
     #   [ Photo- ] --> [ Model ] --> [ infected or  ]
     #   [ graph  ]     [       ]     [ not infected ]
+
+
+    # Data Preparation:
+    # ---------------------------
+    # Image data is represented by a 2d array of pixels each with an RGB colour
+    # space. So, image tensors have shape (IMAGE_HEIGHT, IMAGE_WIDTH, 3). The
+    # colours of the pixels are an array [RED, GREEN, BLUE] where the colour
+    # channels range between 0 to 255. We can normalise them as well by division
+    # by 255. In the greyscale format, the number of channels is 1 so just has
+    # shape (IMAGE_HEIGHT, IMAGE_WIDTH, 1), a 2d tensor.
     #
-    # Image data is represented by a 2d array with an RGB colour space.
+    # Our dataset is included in the TensorFLow library. It contains a total of
+    # 27,558 cell images with equal counts of parasitized and uninfected cells
+    # from the thin blood smear slide images.
+    # https://www.tensorflow.org/datasets/catalog/malaria
+
+    # We can use the tsdf.load() method to load the data in via the Dataset API.
+    # Now, malaria_data is a dictionary with two entries 'train' and 'types'.
+    malaria_data, malaria_data_info = tsdf.load(
+        name = "malaria",     # The name of the dataset
+        with_info = True,     # Imports information about the dataset
+        as_supervised = True, # Returns images as labeled tuple (input, label)
+        shuffle_files = True, # This shuffles the images in the file
+        split = ["train"]     # Which splits of the data to load
+    )
+
+    # Define the proportion of each dataset you want
+    TRAIN_PROPORTION = 0.8
+    TESTING_PROPORTION = 0.1
+    VALIDATION_PROPORTION = 0.1
+    assert TRAIN_PROPORTION + TESTING_PROPORTION + VALIDATION_PROPORTION == 1
     
     
     
