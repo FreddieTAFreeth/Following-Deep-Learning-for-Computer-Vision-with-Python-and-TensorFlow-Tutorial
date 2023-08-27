@@ -4,4 +4,4 @@ Following the video *Deep Learning for Computer Vision with Python and TensorFlo
 If you want to follow/use the code I have written, please follow the repo as follows:
 1) Start at ```Tensors_and_Variables.py```. It contains the prerequisites needed to use the TensorFlow machine learning library.
 2) Proceeed to ```Car_Price_Prediction.py```. This is the first example use-case where we try to predict the prices of second-hand cars given a bunch of parameters using a simple *perceptron* model.
-3) Then go to ```Malaria_Diagnosis.py```. In this example, we build a Convolutional Neural Network to classify whether a peeson has contracted malaria. We use image data of a thin blood smear to visually classify disease contraction (or lack thereof).
+3) Then go to ```Malaria_Diagnosis.py```. In this example, we build a Convolutional Neural Network (CNN) to classify whether a person has contracted malaria. We use image data of a thin blood smear to visually classify disease contraction (or lack thereof).
