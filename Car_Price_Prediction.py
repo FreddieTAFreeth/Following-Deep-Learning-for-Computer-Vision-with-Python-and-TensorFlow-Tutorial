@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ============================================================================ #
-# Car Price Prediction - Frederick T. A. Freeth                     24/08/2023 |
+# Car Price Prediction - Frederick T. A. Freeth                     29/08/2023 |
 # ============================================================================ #
 # Following https://www.youtube.com/watch?v=IA3WxTTPXqQ.
 
@@ -373,8 +373,8 @@ if __name__ == "__main__":
     assert len(train_IDs) + len(test_IDs) + len(validation_IDs) == N
 
     # Define the training, test, and validation sets
-    X_train = X[train_IDs[0]: train_IDs[-1]]
-    y_train = y[train_IDs[0]: train_IDs[-1]]
+    X_train = X[train_IDs[0]:train_IDs[-1]]
+    y_train = y[train_IDs[0]:train_IDs[-1]]
     X_test  = X[test_IDs[0]:test_IDs[-1]]
     y_test  = y[test_IDs[0]:test_IDs[-1]]
     X_val   = X[validation_IDs[0]:validation_IDs[-1]]
