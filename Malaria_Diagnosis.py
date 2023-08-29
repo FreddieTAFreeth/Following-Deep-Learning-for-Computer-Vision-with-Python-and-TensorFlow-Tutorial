@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ============================================================================ #
-# Malaria Diagnosis - Frederick T. A. Freeth                        25/08/2023 |
+# Malaria Diagnosis - Frederick T. A. Freeth                        29/08/2023 |
 # ============================================================================ #
 # Following https://www.youtube.com/watch?v=IA3WxTTPXqQ.
 
@@ -69,12 +69,33 @@ if __name__ == "__main__":
         split = ["train"]     # Which splits of the data to load
     )
 
+    # Break up the dataset into the training, testing, and validation datasets.
+    # You can use the Dataset TensorFlow API (using take, skip, etc) but this
+    # will suffice.
     # Define the proportion of each dataset you want
+    N = len(malaria_data) # Number of cell images
     TRAIN_PROPORTION = 0.8
     TESTING_PROPORTION = 0.1
     VALIDATION_PROPORTION = 0.1
     assert TRAIN_PROPORTION + TESTING_PROPORTION + VALIDATION_PROPORTION == 1
-    
+
+    # Create the IDs of each set
+    train_IDs      = np.arange(0, round(N * TRAIN_PROPORTION))
+    test_IDs       = np.arange(len(train_IDs), len(train_IDs) + round(N * TESTING_PROPORTION))
+    validation_IDs = np.arange(len(test_IDs),  len(test_IDs)  + round(N * VALIDATION_PROPORTION))
+    assert len(train_IDs) + len(test_IDs) + len(validation_IDs) == N
+
+    # Define the training, test, and validation sets
+    X_train = X[train_IDs[0]:train_IDs[-1]]
+    y_train = y[train_IDs[0]:train_IDs[-1]]
+    X_test  = X[test_IDs[0]:test_IDs[-1]]
+    y_test  = y[test_IDs[0]:test_IDs[-1]]
+    X_val   = X[validation_IDs[0]:validation_IDs[-1]]
+    y_val   = y[validation_IDs[0]:validation_IDs[-1]]
+
+    print(X_train.shape, y_train.shape)
+    print(X_test.shape, y_test.shape)
+    print(X_val.shape, y_val.shape)
     
     
 # ============================================================================ #
