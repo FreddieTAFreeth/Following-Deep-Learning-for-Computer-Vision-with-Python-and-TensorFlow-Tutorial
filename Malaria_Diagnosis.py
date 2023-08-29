@@ -93,9 +93,21 @@ if __name__ == "__main__":
     X_val   = X[validation_IDs[0]:validation_IDs[-1]]
     y_val   = y[validation_IDs[0]:validation_IDs[-1]]
 
-    print(X_train.shape, y_train.shape)
-    print(X_test.shape, y_test.shape)
-    print(X_val.shape, y_val.shape)
+
+    # Data Visualisation:
+    # ---------------------------
+    # We will now visualise some elements of the dataset.
+
+    # Plot the first 16 images of the training set
+    for i, (image, label) in enumerate(X_train[0:16]):
+        ax = plt.subplot(4, 4, i + 1)
+        plt.title(malaria_data_info.features["label"].int2str(label))
+        plt.axis("off")
+        plt.imshow(image)
+
+
+    # Data Processing:
+    # ---------------------------
     
     
 # ============================================================================ #
