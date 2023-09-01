@@ -85,13 +85,15 @@ if __name__ == "__main__":
     validation_IDs = np.arange(len(test_IDs),  len(test_IDs)  + round(N * VALIDATION_PROPORTION))
     assert len(train_IDs) + len(test_IDs) + len(validation_IDs) == N
 
+    print(malaria_data[1])
+
     # Define the training, test, and validation sets
-    X_train = X[train_IDs[0]:train_IDs[-1]]
-    y_train = y[train_IDs[0]:train_IDs[-1]]
-    X_test  = X[test_IDs[0]:test_IDs[-1]]
-    y_test  = y[test_IDs[0]:test_IDs[-1]]
-    X_val   = X[validation_IDs[0]:validation_IDs[-1]]
-    y_val   = y[validation_IDs[0]:validation_IDs[-1]]
+    X_train = malaria_data[train_IDs[0]:train_IDs[-1]]["image"]
+    y_train = malaria_data_info.features["label"][train_IDs[0]:train_IDs[-1]]
+    X_test  = malaria_data[test_IDs[0]:test_IDs[-1]]
+    y_test  = malaria_data_info.features["label"][test_IDs[0]:test_IDs[-1]]
+    X_val   = malaria_data[validation_IDs[0]:validation_IDs[-1]]
+    y_val   = malaria_data_info.features["label"][validation_IDs[0]:validation_IDs[-1]]
 
 
     # Data Visualisation:
@@ -99,8 +101,8 @@ if __name__ == "__main__":
     # We will now visualise some elements of the dataset.
 
     # Plot the first 16 images of the training set
-    for i, (image, label) in enumerate(X_train[0:16]):
-        ax = plt.subplot(4, 4, i + 1)
+    for i, (image, label) in enumerate(X_train[0:9]):
+        ax = plt.subplot(3, 3, i + 1)
         plt.title(malaria_data_info.features["label"].int2str(label))
         plt.axis("off")
         plt.imshow(image)
