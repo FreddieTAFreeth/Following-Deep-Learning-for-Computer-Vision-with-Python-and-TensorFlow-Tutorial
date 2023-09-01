@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ============================================================================ #
-# Malaria Diagnosis - Frederick T. A. Freeth                        29/08/2023 |
+# Malaria Diagnosis - Frederick T. A. Freeth                        01/09/2023 |
 # ============================================================================ #
 # Following https://www.youtube.com/watch?v=IA3WxTTPXqQ.
 
@@ -61,7 +61,7 @@ if __name__ == "__main__":
 
     # We can use the tsdf.load() method to load the data in via the Dataset API.
     # Now, malaria_data is a dictionary with two entries 'train' and 'types'.
-    malaria_data, malaria_data_info = tsdf.load(
+    malaria_data, malaria_data_info = tfds.load(
         name = "malaria",     # The name of the dataset
         with_info = True,     # Imports information about the dataset
         as_supervised = True, # Returns images as labeled tuple (input, label)
