@@ -85,8 +85,6 @@ if __name__ == "__main__":
     validation_IDs = np.arange(len(test_IDs),  len(test_IDs)  + round(N * VALIDATION_PROPORTION))
     assert len(train_IDs) + len(test_IDs) + len(validation_IDs) == N
 
-    print(malaria_data[1])
-
     # Define the training, test, and validation sets
     X_train = malaria_data[train_IDs[0]:train_IDs[-1]]["image"]
     y_train = malaria_data_info.features["label"][train_IDs[0]:train_IDs[-1]]
